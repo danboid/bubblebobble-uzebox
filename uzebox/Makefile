@@ -1,93 +1,103 @@
-# Uzebox BubbleBobble Makefile
-# Target ATMega644p @ 28.636 MHz (NTSC)
+###############################################################################
+# Makefile for BubbleBobble Uzebox port
+###############################################################################
 
-# MCU and clock settings
-MCU = atmega644p
-F_CPU = 28636360
+PROJECT = BubbleBobble
+GAME   = BubbleBobble
+MCU    = atmega644
+TARGET = $(GAME).elf
+CC     = avr-gcc
+INFO   = ../gameinfo.properties
 
-# Toolchain
-CC = avr-gcc
-CXX = avr-g++
-AS = avr-as
-AR = avr-ar
-OBJCOPY = avr-objcopy
-OBJDUMP = avr-objdump
-SIZE = avr-size
-RM = rm -f
+## Kernel settings
+KERNEL_DIR    = ../../../kernel
+KERNEL_OPTIONS = -DVIDEO_MODE=3
+KERNEL_OPTIONS += -DVRAM_TILES_H=32
+KERNEL_OPTIONS += -DVRAM_TILES_V=28
+KERNEL_OPTIONS += -DSCREEN_TILES_V=28
+KERNEL_OPTIONS += -DINTRO_LOGO=0
+KERNEL_OPTIONS += -DMIXER_CHAN4_TYPE=1
 
-# Include paths
-UZEBOX_DIR = ../..
-UZEBOX_KERNEL = $(UZEBOX_DIR)/kernel
-UZEBOX_DEMOS = $(UZEBOX_DIR)/demos
+## Options common to compile, link and assembly rules
+COMMON = -mmcu=$(MCU)
 
-C_INCLUDES = -I$(UZEBOX_KERNEL) -I. -Wall -Wextra
+## Compile options common for all C compilation units.
+CFLAGS = $(COMMON)
+CFLAGS += -Wall -gdwarf-2 -std=gnu99 -DF_CPU=28636360UL -Os -fsigned-char -ffunction-sections
+CFLAGS += -MD -MP -MT $(*F).o -MF dep/$(@F).d
+CFLAGS += $(KERNEL_OPTIONS)
 
-# Compilation flags
-CFLAGS = -mmcu=$(MCU) -DF_CPU=$(F_CPU) -Os -fsigned-char -Wunused-parameter
-CFLAGS += $(C_INCLUDES) -std=gnu99 -ffunction-sections -fdata-sections
-CXXFLAGS = -mmcu=$(MCU) -DF_CPU=$(F_CPU) -Os -fsigned-char -Wunused-parameter
-CXXFLAGS += $(C_INCLUDES) -std=c++11 -fno-exceptions -fno-rtti -fno-threadsafe-statics
-CXXFLAGS += -fconserve-space -ffunction-sections -fdata-sections
-ASFLAGS = -mmcu=$(MCU) -I$(UZEBOX_KERNEL)
-LDFLAGS = -mmcu=$(MCU) -Wl,--gc-sections -Wl,-Map,$(TARGET).map,--defsym=heap_end=0x80ff
+## Assembly specific flags
+ASMFLAGS = $(COMMON)
+ASMFLAGS += $(CFLAGS)
+ASMFLAGS += -x assembler-with-cpp -Wa,-gdwarf2
 
-# Source files
-C_SOURCES = $(wildcard src/*.c)
-CXX_SOURCES = $(wildcard src/*.cpp)
-DATA_FILES = $(wildcard data/*)
+## Linker flags
+LDFLAGS = $(COMMON)
+LDFLAGS += -Wl,-Map=$(GAME).map
+LDFLAGS += -Wl,-gc-sections
 
-# Object files
-OBJECTS = $(C_SOURCES:.c=.o)
-OBJECTS += $(CXX_SOURCES:.cpp=.o)
+## Intel Hex file production flags
+HEX_FLASH_FLAGS = -R .eeprom
+HEX_EEPROM_FLAGS = -j .eeprom
+HEX_EEPROM_FLAGS += --set-section-flags=.eeprom="alloc,load"
+HEX_EEPROM_FLAGS += --change-section-lma .eeprom=0 --no-change-warnings
 
-# Target binary
-TARGET = bubblebobble
+## Objects that must be built in order to link
+KERNEL_OBJECTS = uzeboxVideoEngineCore.o uzeboxSoundEngineCore.o uzeboxCore.o uzeboxSoundEngine.o uzeboxVideoEngine.o
 
-# Default target
-all: $(TARGET).hex $(TARGET).eep
+## Game source files
+GAME_SOURCES = $(wildcard src/*.c)
+GAME_OBJECTS = $(GAME_SOURCES:src/%.c=%.o)
 
-# Include Uzebox kernel
-include $(UZEBOX_KERNEL)/uzebox.mk
+OBJECTS = $(KERNEL_OBJECTS) $(GAME_OBJECTS)
 
-# Compile C sources
-%.o: %.c
-	$(CC) $(CFLAGS) -c $< -o $@
+## Include Directories
+INCLUDES = -I"$(KERNEL_DIR)" -I"src" -I"data"
 
-# Compile C++ sources
-%.o: %.cpp
-	$(CXX) $(CXXFLAGS) -c $< -o $@
+## Build
+all: $(TARGET) $(GAME).hex $(GAME).eep $(GAME).lss size
 
-# Link
-$(TARGET).elf: $(OBJECTS)
-	$(CC) $(OBJECTS) $(LDFLAGS) -lm -o $@
-	$(SIZE) $@
+## Compile Kernel files
+uzeboxVideoEngineCore.o: $(KERNEL_DIR)/uzeboxVideoEngineCore.s
+	$(CC) $(INCLUDES) $(ASMFLAGS) -c $<
 
-# Create flash ROM image
-%.hex: %.elf
-	$(OBJCOPY) -O ihex -R .eeprom $< $@
+uzeboxSoundEngineCore.o: $(KERNEL_DIR)/uzeboxSoundEngineCore.s
+	$(CC) $(INCLUDES) $(ASMFLAGS) -c $<
 
-# Create EEPROM image
-%.eep: %.elf
-	$(OBJCOPY) -j .eeprom --change-section-lma .eeprom=0 -O ihex $< $@
+uzeboxCore.o: $(KERNEL_DIR)/uzeboxCore.c
+	$(CC) $(INCLUDES) $(CFLAGS) -c $<
 
-# Disassemble
-disasm: $(TARGET).elf
-	$(OBJDUMP) -d -S $< > $(TARGET).lst
+uzeboxSoundEngine.o: $(KERNEL_DIR)/uzeboxSoundEngine.c
+	$(CC) $(INCLUDES) $(CFLAGS) -c $<
 
-# Debug info
-debug: $(TARGET).elf
-	$(OBJDUMP) -x -d $< > $(TARGET).dump
+uzeboxVideoEngine.o: $(KERNEL_DIR)/uzeboxVideoEngine.c
+	$(CC) $(INCLUDES) $(CFLAGS) -c $<
 
-# Clean
+## Compile game sources
+%.o: src/%.c
+	$(CC) $(INCLUDES) $(CFLAGS) -c $< -o $@
+
+## Link
+$(TARGET): $(OBJECTS)
+	$(CC) $(LDFLAGS) $(OBJECTS) -lm -o $@
+
+%.hex: $(TARGET)
+	avr-objcopy -O ihex $(HEX_FLASH_FLAGS) $< $@
+
+%.eep: $(TARGET)
+	avr-objcopy $(HEX_EEPROM_FLAGS) -O ihex $< $@ || exit 0
+
+%.lss: $(TARGET)
+	avr-objdump -h -S $< > $@
+
+size: $(TARGET)
+	avr-size -A $(TARGET)
+
+## Clean target
+.PHONY: clean
 clean:
-	$(RM) $(OBJECTS) $(TARGET).elf $(TARGET).hex $(TARGET).eep $(TARGET).map $(TARGET).lst $(TARGET).dump
+	-rm -rf $(OBJECTS) $(GAME).* dep/*
 
-# Flash to device
-flash: $(TARGET).hex
-	avrdude -c usbasp -p m644p -U flash:w:$<:i
-
-# Flash EEPROM
-flash-eeprom: $(TARGET).eep
-	avrdude -c usbasp -p m644p -U eeprom:w:$<:i
-
-.PHONY: all clean flash flash-eeprom disasm debug
+## Dependencies
+-include $(shell mkdir -p dep 2>/dev/null) $(wildcard dep/*)

@@ -43,14 +43,33 @@ This matches the game's original grid size of 32×28, making it a perfect fit!
 
 ### Build
 
+The project expects the Uzebox kernel to be at `../../kernel` relative to this directory. 
+Your directory structure should look like:
+
+```
+uzebox/                    <- this project (demos/bubblebobble-uzebox/uzebox/)
+kernel/                    <- Uzebox kernel (from git clone)
+demos/
+```
+
+Clone the kernel if you haven't:
+
 ```bash
-cd uzebox
+cd ../..
+git clone https://github.com/Uzebox/uzebox.git
+```
+
+Then build:
+
+```bash
+cd demos/bubblebobble-uzebox/uzebox
 make
 ```
 
 This will produce:
-- `bubblebobble.hex` - Flash ROM image
-- `bubblebobble.eep` - EEPROM data (if needed)
+- `BubbleBobble.hex` - Flash ROM image
+- `BubbleBobble.eep` - EEPROM data (if needed)
+- `BubbleBobble.lss` - Disassembly listing
 
 ### Flashing
 
