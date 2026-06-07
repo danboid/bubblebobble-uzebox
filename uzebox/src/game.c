@@ -1,3 +1,4 @@
+#include <uzebox.h>
 /*
  * BubbleBobble Uzebox - Main Game Module
  * 
