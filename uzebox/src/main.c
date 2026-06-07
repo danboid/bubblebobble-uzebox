@@ -7,7 +7,7 @@
 #include <avr/pgmspace.h>
 #include <uzebox.h>
 #include "game.h"
-#include "data/tileset.inc"
+#include "tileset.inc"
 
 // =============================================================================
 // MAIN ENTRY POINT
