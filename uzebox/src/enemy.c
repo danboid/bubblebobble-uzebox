@@ -191,7 +191,7 @@ void enemy_update_animation(Enemy* enemy) {
 // ENEMY PHYSICS UPDATE
 // =============================================================================
 
-void enemy_physics_update(Enemy* enemy, Level* level) {
+void enemy_physics_update(Enemy* enemy, GameContext* ctx) {
     if (enemy->captured) return;
     if (!ENTITY_IS_ACTIVE(&enemy->base)) return;
     
@@ -204,12 +204,12 @@ void enemy_physics_update(Enemy* enemy, Level* level) {
     world_to_grid(new_x, enemy->base.y, &grid_x, &grid_y);
     
     if (enemy->base.vx > 0) {
-        if (is_tile_solid(level, grid_x + 1, grid_y) || is_tile_solid(level, grid_x + 1, grid_y + 1)) {
+        if (is_tile_solid(ctx, grid_x + 1, grid_y) || is_tile_solid(ctx, grid_x + 1, grid_y + 1)) {
             new_x = (grid_x + 1) * TILE_WIDTH - enemy->base.width;
             enemy->walk_direction = -enemy->walk_direction;
         }
     } else if (enemy->base.vx < 0) {
-        if (is_tile_solid(level, grid_x, grid_y) || is_tile_solid(level, grid_x, grid_y + 1)) {
+        if (is_tile_solid(ctx, grid_x, grid_y) || is_tile_solid(ctx, grid_x, grid_y + 1)) {
             new_x = (grid_x + 1) * TILE_WIDTH;
             enemy->walk_direction = -enemy->walk_direction;
         }
@@ -219,7 +219,7 @@ void enemy_physics_update(Enemy* enemy, Level* level) {
     world_to_grid(new_x, new_y, &grid_x, &grid_y);
     
     if (enemy->base.vy > 0) {
-        if (is_tile_solid(level, grid_x, grid_y + 1)) {
+        if (is_tile_solid(ctx, grid_x, grid_y + 1)) {
             new_y = (grid_y + 1) * TILE_HEIGHT - enemy->base.height;
             enemy->base.vy = 0;
             if (enemy->state == ENEMY_FALLING || enemy->state == ENEMY_JUMPING) {
@@ -227,7 +227,7 @@ void enemy_physics_update(Enemy* enemy, Level* level) {
             }
         }
     } else if (enemy->base.vy < 0) {
-        if (is_tile_solid(level, grid_x, grid_y)) {
+        if (is_tile_solid(ctx, grid_x, grid_y)) {
             new_y = (grid_y + 1) * TILE_HEIGHT;
             enemy->base.vy = 0;
         }
@@ -317,7 +317,7 @@ void enemy_render(const Enemy* enemy) {
 // SPAWN ENEMIES FROM LEVEL DATA
 // =============================================================================
 
-void spawn_enemies_from_level(Level* level) {
+void spawn_enemies_from_level(GameContext* ctx) {
     game.enemy_count = level->enemy_count;
     
     for (uint8_t i = 0; i < game.enemy_count && i < 8; i++) {
