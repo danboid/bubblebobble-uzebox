@@ -13,6 +13,7 @@
 #ifndef LEVEL_DATA_H
 #define LEVEL_DATA_H
 
+#include <avr/pgmspace.h>
 #include "types.h"
 
 // =============================================================================
@@ -255,8 +256,8 @@ static const uint8_t* const level_enemies[] PROGMEM = {
 void load_level(uint8_t level_index, Level* level) {
     const uint8_t* data = pgm_read_word(&level_data[level_index]);
     
-    for (uint8_t y = 0; y < GRID_SIZE_Y; y++) {
-        for (uint8_t x = 0; x < GRID_SIZE_X; x++) {
+    for (uint8_t y = 0; y < 32; y++) {
+        for (uint8_t x = 0; x < 28; x++) {
             uint8_t tile = pgm_read_byte(data++);
             level->tiles[y][x].type = tile;
         }
@@ -275,7 +276,7 @@ void load_level(uint8_t level_index, Level* level) {
 
 // Get tile at grid position
 BlockType get_tile(const Level* level, int8_t grid_x, int8_t grid_y) {
-    if (grid_x < 0 || grid_x >= GRID_SIZE_X || grid_y < 0 || grid_y >= GRID_SIZE_Y) {
+    if (grid_x < 0 || grid_x >= 28 || grid_y < 0 || grid_y >= 32) {
         return BLOCK_SOLID;  // Out of bounds = solid
     }
     return (BlockType)level->tiles[grid_y][grid_x].type;

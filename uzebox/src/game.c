@@ -7,10 +7,6 @@
 #include "types.h"
 #include "config.h"
 #include "level_data.h"
-#include "player.c"
-#include "enemy.c"
-#include "bubble.c"
-#include "collision.c"
 
 // =============================================================================
 // GLOBAL GAME CONTEXT

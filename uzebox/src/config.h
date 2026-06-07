@@ -16,25 +16,25 @@
 // SCREEN & VIDEO SETTINGS (Mode 3 Extended - No Scrolling)
 // =============================================================================
 
-// VRAM dimensions for Mode 3 extended (no scrolling)
-#define VRAM_TILES_H     32    // Screen width in tiles (256 pixels)
-#define VRAM_TILES_V     28    // Screen height in tiles (224 pixels)
-
 // Tile size
 #define TILE_WIDTH       8
 #define TILE_HEIGHT      8
 
-// Screen resolution
-#define SCREEN_WIDTH     (VRAM_TILES_H * TILE_WIDTH)  // 256 pixels
-#define SCREEN_HEIGHT    (VRAM_TILES_V * TILE_HEIGHT) // 224 pixels
+// Screen resolution (Mode 3: 32x28 tiles = 256x224)
+#define SCREEN_WIDTH     256
+#define SCREEN_HEIGHT    224
 
 // =============================================================================
 // GAME CONSTANTS
 // =============================================================================
 
 // Grid/Level dimensions (matches original)
-#define GRID_SIZE_X       32   // Level width in tiles
-#define GRID_SIZE_Y       28   // Level height in tiles
+#define GRID_WIDTH        32   // Level width in tiles
+#define GRID_HEIGHT       28   // Level height in tiles
+
+// Aliases for compatibility
+#define GRID_SIZE_X       GRID_WIDTH
+#define GRID_SIZE_Y       GRID_HEIGHT
 
 // Player settings
 #define PLAYER_SPEED      2    // Pixels per frame
