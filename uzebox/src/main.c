@@ -19,13 +19,8 @@ int main(void) {
     // Initialize game with 1 player
     game_init(1);
 
-    // Start the kernel - it will call GameLoop() at ~60 FPS
-    // GameLoop() is defined in game.c
-    StartMusicPlayer(0);
-    
+    // Main loop - kernel calls GameLoop() at ~60 FPS
     while (1) {
-        // Kernel handles game loop via GameLoop() callback
+        // Do nothing - kernel handles the game loop
     }
-
-    return 0;
 }
