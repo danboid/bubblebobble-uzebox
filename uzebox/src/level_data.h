@@ -252,56 +252,56 @@ static const uint8_t* const level_enemies[] PROGMEM = {
 // LEVEL FUNCTIONS
 // =============================================================================
 
-// Load level data from flash into RAM
-void load_level(uint8_t level_index, Level* level) {
+// Load level data from flash into GameContext
+void load_level(GameContext* ctx, uint8_t level_index) {
     const uint8_t* data = pgm_read_word(&level_data[level_index]);
-    
-    for (uint8_t y = 0; y < 32; y++) {
-        for (uint8_t x = 0; x < 28; x++) {
+
+    // Load 32x28 tiles (width x height)
+    for (uint8_t y = 0; y < 28; y++) {
+        for (uint8_t x = 0; x < 32; x++) {
             uint8_t tile = pgm_read_byte(data++);
-            level->tiles[y][x].type = tile;
+            ctx->level_tiles[y][x].type = tile;
         }
     }
-    
+
     // Load enemy spawn data
     const uint8_t* enemy_data = pgm_read_word(&level_enemies[level_index]);
-    level->enemy_count = pgm_read_byte(enemy_data++);
-    
-    for (uint8_t i = 0; i < level->enemy_count && i < 8; i++) {
-        level->enemies[i * 3 + 0] = pgm_read_byte(enemy_data++);  // type
-        level->enemies[i * 3 + 1] = pgm_read_byte(enemy_data++);  // x tile
-        level->enemies[i * 3 + 2] = pgm_read_byte(enemy_data++);  // y tile
+    ctx->enemy_count = pgm_read_byte(enemy_data++);
+
+    for (uint8_t i = 0; i < ctx->enemy_count && i < 8; i++) {
+        ctx->enemies[i].base.sprite_base = pgm_read_byte(enemy_data++);
+        ctx->enemies[i].base.x = pgm_read_byte(enemy_data++) * 8;
+        ctx->enemies[i].base.y = pgm_read_byte(enemy_data++) * 8;
+        ctx->enemies[i].base.flags = FLAG_ACTIVE;
     }
 }
 
 // Get tile at grid position
-BlockType get_tile(const Level* level, int8_t grid_x, int8_t grid_y) {
-    if (grid_x < 0 || grid_x >= 28 || grid_y < 0 || grid_y >= 32) {
-        return BLOCK_SOLID;  // Out of bounds = solid
+static inline BlockType get_tile(GameContext* ctx, int8_t grid_x, int8_t grid_y) {
+    if (grid_x < 0 || grid_x >= 32 || grid_y < 0 || grid_y >= 28) {
+        return BLOCK_SOLID;
     }
-    return (BlockType)level->tiles[grid_y][grid_x].type;
+    return (BlockType)ctx->level_tiles[grid_y][grid_x].type;
 }
 
-// Check if a tile is solid (collidable)
-uint8_t is_tile_solid(const Level* level, int8_t grid_x, int8_t grid_y) {
-    BlockType tile = get_tile(level, grid_x, grid_y);
-    return (tile == BLOCK_SOLID);
+// Check if a tile is solid
+static inline uint8_t is_tile_solid(GameContext* ctx, int8_t grid_x, int8_t grid_y) {
+    return get_tile(ctx, grid_x, grid_y) == BLOCK_SOLID;
 }
 
-// Check if a tile is semi-solid (one-way platform)
-uint8_t is_tile_semi_solid(const Level* level, int8_t grid_x, int8_t grid_y) {
-    BlockType tile = get_tile(level, grid_x, grid_y);
-    return (tile == BLOCK_SEMI);
+// Check if a tile is semi-solid
+static inline uint8_t is_tile_semi_solid(GameContext* ctx, int8_t grid_x, int8_t grid_y) {
+    return get_tile(ctx, grid_x, grid_y) == BLOCK_SEMI;
 }
 
 // Convert world position to grid position
-void world_to_grid(int16_t world_x, int16_t world_y, int8_t* grid_x, int8_t* grid_y) {
+static inline void world_to_grid(int16_t world_x, int16_t world_y, int8_t* grid_x, int8_t* grid_y) {
     *grid_x = world_x / TILE_WIDTH;
     *grid_y = world_y / TILE_HEIGHT;
 }
 
-// Convert grid position to world position (top-left of tile)
-void grid_to_world(int8_t grid_x, int8_t grid_y, int16_t* world_x, int16_t* world_y) {
+// Convert grid position to world position
+static inline void grid_to_world(int8_t grid_x, int8_t grid_y, int16_t* world_x, int16_t* world_y) {
     *world_x = grid_x * TILE_WIDTH;
     *world_y = grid_y * TILE_HEIGHT;
 }

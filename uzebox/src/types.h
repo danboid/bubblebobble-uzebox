@@ -107,7 +107,8 @@ typedef struct Bubble {
     uint8_t  lifetime;      // Frames until pop
     uint8_t  state;         // 0=normal, 1=floating, 2=popping
     uint8_t  captured_enemy;// Index of captured enemy (0xFF = none)
-    uint8_t  float_timer;   // Time spent floating
+    uint8_t  float_timer;
+    uint8_t  pop_out;   // Time spent floating
 } Bubble;
 
 // Bubble states
@@ -186,7 +187,7 @@ typedef struct GameContext {
     uint8_t dead_enemy_count;
     
     // Current level
-    Level   current_level;
+    Tile level_tiles[28][32];
     
     // Level transition
     uint8_t transition_timer;
