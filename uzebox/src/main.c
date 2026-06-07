@@ -1,7 +1,7 @@
 /*
  * BubbleBobble Uzebox - Main Entry Point
  *
- * Uzebox kernel entry point - GameLoop() is called by kernel at 60 FPS
+ * Based on the stopwatch example pattern
  */
 
 #include <avr/pgmspace.h>
@@ -17,7 +17,7 @@ int main(void) {
     // Initialize video mode
     InitializeVideoMode();
 
-    // Set up tile table and sprites - CRITICAL for video output!
+    // Set up tile table and sprites
     SetTileTable(tileset);
     SetSpritesTileTable(tileset);
 
@@ -27,8 +27,11 @@ int main(void) {
     // Initialize game with 1 player
     game_init(1);
 
-    // Main loop - call WaitVsync to sync with vertical blank
+    // Main game loop - like the stopwatch example
     while (1) {
-        WaitVsync(1);
+        WaitVsync(1);  // Sync to ~60 FPS
+        
+        // Call GameLoop directly
+        GameLoop();
     }
 }

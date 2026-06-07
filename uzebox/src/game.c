@@ -394,6 +394,17 @@ void game_update(void) {
 void GameLoop(void) {
     game.frame_counter++;
 
+    // Test: Draw a simple pattern every frame
+    static uint8_t frame = 0;
+    frame++;
+    
+    // Fill entire screen with tile 0 on black, tile 1 on white checkerboard
+    for (uint8_t y = 0; y < 28; y++) {
+        for (uint8_t x = 0; x < 32; x++) {
+            vram[(y) * VRAM_TILES_H + (x)] = ((x + y + (frame >> 4)) % 2) ? 1 : 0;
+        }
+    }
+
     // Read input
     game_read_input();
 
