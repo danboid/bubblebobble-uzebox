@@ -20,7 +20,7 @@ uint8_t can_stand_at(int16_t x, int16_t y, uint8_t width) {
     // Check bottom-center of entity
     world_to_grid(x + width/2, y + 1, &grid_x, &grid_y);
     
-    if (is_tile_semi_solid( grid_x, grid_y)) {
+    if (is_tile_semi_solid(game.level_index, grid_x, grid_y)) {
         return 1;
     }
     
@@ -35,10 +35,10 @@ int16_t get_ground_height(int16_t x, uint8_t width) {
     
     // Scan downward for ground
     for (int8_t y = grid_y; y < GRID_SIZE_Y; y++) {
-        if (is_tile_solid( grid_x, y)) {
+        if (is_tile_solid(game.level_index, grid_x, y)) {
             return y * TILE_HEIGHT;
         }
-        if (is_tile_semi_solid( grid_x, y)) {
+        if (is_tile_semi_solid(game.level_index, grid_x, y)) {
             return y * TILE_HEIGHT;
         }
     }
@@ -138,7 +138,7 @@ void check_bubble_tile_collisions(void) {
         
         // Bottom collision
         world_to_grid(bubble->base.x, bubble->base.y + bubble->base.height, &grid_x, &grid_y);
-        if (is_tile_solid( grid_x, grid_y)) {
+        if (is_tile_solid(game.level_index, grid_x, grid_y)) {
             bubble->base.y = grid_y * TILE_HEIGHT - bubble->base.height;
             bubble->base.vy = -bubble->base.vy / 2;
             if (bubble->base.vy > -2) bubble->base.vy = -2;
@@ -146,11 +146,11 @@ void check_bubble_tile_collisions(void) {
         
         // Side collisions
         world_to_grid(bubble->base.x, bubble->base.y + bubble->base.height/2, &grid_x, &grid_y);
-        if (bubble->base.vx > 0 && is_tile_solid( grid_x + 1, grid_y)) {
+        if (bubble->base.vx > 0 && is_tile_solid(game.level_index, grid_x + 1, grid_y)) {
             bubble->base.x = grid_x * TILE_WIDTH - bubble->base.width;
             bubble->base.vx = -bubble->base.vx / 2;
         }
-        if (bubble->base.vx < 0 && is_tile_solid( grid_x - 1, grid_y)) {
+        if (bubble->base.vx < 0 && is_tile_solid(game.level_index, grid_x - 1, grid_y)) {
             bubble->base.x = (grid_x + 1) * TILE_WIDTH;
             bubble->base.vx = -bubble->base.vx / 2;
         }
@@ -228,7 +228,7 @@ void update_dead_enemies(void) {
         int8_t grid_x, grid_y;
         world_to_grid(dead->base.x, dead->base.y + dead->base.height, &grid_x, &grid_y);
         
-        if (is_tile_solid( grid_x, grid_y) || grid_y >= GRID_SIZE_Y) {
+        if (is_tile_solid(game.level_index, grid_x, grid_y) || grid_y >= GRID_SIZE_Y) {
             dead->base.y = grid_y * TILE_HEIGHT - dead->base.height;
             dead->base.vy = -dead->base.vy / 2;
             dead->base.vx = (dead->base.vx * 9) / 10;

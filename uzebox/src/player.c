@@ -240,13 +240,13 @@ void player_physics_update(Player* player, GameContext* ctx) {
     
     if (player->base.vx > 0) {
         // Moving right - check right edge
-        if (is_tile_solid( grid_x + 1, grid_y) || is_tile_solid( grid_x + 1, grid_y + 1)) {
+        if (is_tile_solid(game.level_index, grid_x + 1, grid_y) || is_tile_solid(game.level_index, grid_x + 1, grid_y + 1)) {
             new_x = (grid_x + 1) * TILE_WIDTH - player->base.width;
             player->base.vx = 0;
         }
     } else if (player->base.vx < 0) {
         // Moving left - check left edge
-        if (is_tile_solid( grid_x, grid_y) || is_tile_solid( grid_x, grid_y + 1)) {
+        if (is_tile_solid(game.level_index, grid_x, grid_y) || is_tile_solid(game.level_index, grid_x, grid_y + 1)) {
             new_x = (grid_x + 1) * TILE_WIDTH;
             player->base.vx = 0;
         }
@@ -258,7 +258,7 @@ void player_physics_update(Player* player, GameContext* ctx) {
     
     if (player->base.vy > 0) {
         // Falling - check below
-        if (is_tile_solid( grid_x, grid_y + 1)) {
+        if (is_tile_solid(game.level_index, grid_x, grid_y + 1)) {
             new_y = (grid_y + 1) * TILE_HEIGHT - player->base.height;
             player->base.vy = 0;
             player->base.flags |= FLAG_GROUNDED;
@@ -272,7 +272,7 @@ void player_physics_update(Player* player, GameContext* ctx) {
         }
     } else if (player->base.vy < 0) {
         // Rising - check above
-        if (is_tile_solid( grid_x, grid_y) || is_tile_solid( grid_x + 1, grid_y)) {
+        if (is_tile_solid(game.level_index, grid_x, grid_y) || is_tile_solid(game.level_index, grid_x + 1, grid_y)) {
             new_y = (grid_y + 1) * TILE_HEIGHT;
             player->base.vy = 0;
         }

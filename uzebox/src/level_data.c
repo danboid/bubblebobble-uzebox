@@ -1,7 +1,7 @@
 /*
  * BubbleBobble Uzebox - Level Data Implementation
  *
- * Level loading functions
+ * Level loading and tile reading functions
  */
 
 #include <uzebox.h>
@@ -35,4 +35,18 @@ void load_level(GameContext* ctx, uint8_t level_index) {
         ctx->enemies[i].base.y = pgm_read_byte(enemy_data++) * 8;
         ctx->enemies[i].base.flags = FLAG_ACTIVE;
     }
+}
+
+// Get tile at grid position - reads from Flash memory
+BlockType get_tile(uint8_t level_index, int8_t grid_x, int8_t grid_y) {
+    // Out of bounds check
+    if (grid_x < 0 || grid_x >= 32 || grid_y < 0 || grid_y >= 28) {
+        return BLOCK_SOLID;  // Treat out of bounds as solid
+    }
+    
+    // Read tile directly from Flash memory
+    const uint8_t* level_ptr = (const uint8_t*)pgm_read_word(&level_data[level_index]);
+    uint8_t tile = pgm_read_byte(level_ptr + (grid_y * 32) + grid_x);
+    
+    return (BlockType)tile;
 }

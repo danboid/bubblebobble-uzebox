@@ -297,14 +297,14 @@ void render_level(void) {
     // Render tiles using SetTile (tile coordinates, not pixels)
     for (uint8_t y = 0; y < 28; y++) {
         for (uint8_t x = 0; x < 32; x++) {
-            BlockType tile = get_tile( x, y);
+            BlockType tile = get_tile(game.level_index, x, y);
 
             if (tile == BLOCK_SOLID) {
-                vram[(y) * VRAM_TILES_H + (x)] = 1;
+                SetTile(x, y, 1);  // Solid tile
             } else if (tile == BLOCK_SEMI) {
-                vram[(y) * VRAM_TILES_H + (x)] = 2;
+                SetTile(x, y, 2);  // Semi-solid tile
             } else {
-                vram[(y) * VRAM_TILES_H + (x)] = 0;
+                SetTile(x, y, 0);  // Empty/air tile
             }
         }
     }

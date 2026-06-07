@@ -112,14 +112,14 @@ void enemy_update_walking(Enemy* enemy) {
     int8_t grid_x, grid_y;
     world_to_grid(enemy->base.x, enemy->base.y + 1, &grid_x, &grid_y);
     
-    if (!is_tile_solid( grid_x, grid_y)) {
+    if (!is_tile_solid(game.level_index, grid_x, grid_y)) {
         enemy->state = ENEMY_FALLING;
         return;
     }
     
     // Check for wall - turn around
     int8_t check_x = (enemy->walk_direction > 0) ? grid_x + 1 : grid_x - 1;
-    if (is_tile_solid( check_x, grid_y) || is_tile_solid( check_x, grid_y - 1)) {
+    if (is_tile_solid(game.level_index, check_x, grid_y) || is_tile_solid(game.level_index, check_x, grid_y - 1)) {
         enemy->walk_direction = -enemy->walk_direction;
     }
 }
@@ -135,7 +135,7 @@ void enemy_update_falling(Enemy* enemy) {
     int8_t grid_x, grid_y;
     world_to_grid(enemy->base.x, enemy->base.y + 1, &grid_x, &grid_y);
     
-    if (is_tile_solid( grid_x, grid_y) && enemy->base.vy > 0) {
+    if (is_tile_solid(game.level_index, grid_x, grid_y) && enemy->base.vy > 0) {
         enemy->state = ENEMY_WALKING;
         enemy->base.y = grid_y * TILE_HEIGHT - enemy->base.height;
         enemy->base.vy = 0;
@@ -156,7 +156,7 @@ void enemy_update_jumping(Enemy* enemy) {
     int8_t grid_x, grid_y;
     world_to_grid(enemy->base.x, enemy->base.y + 1, &grid_x, &grid_y);
     
-    if (is_tile_solid( grid_x, grid_y) && enemy->base.vy >= 0) {
+    if (is_tile_solid(game.level_index, grid_x, grid_y) && enemy->base.vy >= 0) {
         enemy->state = ENEMY_WALKING;
         enemy->base.y = grid_y * TILE_HEIGHT - enemy->base.height;
         enemy->base.vy = 0;
@@ -204,12 +204,12 @@ void enemy_physics_update(Enemy* enemy, GameContext* ctx) {
     world_to_grid(new_x, enemy->base.y, &grid_x, &grid_y);
     
     if (enemy->base.vx > 0) {
-        if (is_tile_solid( grid_x + 1, grid_y) || is_tile_solid( grid_x + 1, grid_y + 1)) {
+        if (is_tile_solid(game.level_index, grid_x + 1, grid_y) || is_tile_solid(game.level_index, grid_x + 1, grid_y + 1)) {
             new_x = (grid_x + 1) * TILE_WIDTH - enemy->base.width;
             enemy->walk_direction = -enemy->walk_direction;
         }
     } else if (enemy->base.vx < 0) {
-        if (is_tile_solid( grid_x, grid_y) || is_tile_solid( grid_x, grid_y + 1)) {
+        if (is_tile_solid(game.level_index, grid_x, grid_y) || is_tile_solid(game.level_index, grid_x, grid_y + 1)) {
             new_x = (grid_x + 1) * TILE_WIDTH;
             enemy->walk_direction = -enemy->walk_direction;
         }
@@ -219,7 +219,7 @@ void enemy_physics_update(Enemy* enemy, GameContext* ctx) {
     world_to_grid(new_x, new_y, &grid_x, &grid_y);
     
     if (enemy->base.vy > 0) {
-        if (is_tile_solid( grid_x, grid_y + 1)) {
+        if (is_tile_solid(game.level_index, grid_x, grid_y + 1)) {
             new_y = (grid_y + 1) * TILE_HEIGHT - enemy->base.height;
             enemy->base.vy = 0;
             if (enemy->state == ENEMY_FALLING || enemy->state == ENEMY_JUMPING) {
@@ -227,7 +227,7 @@ void enemy_physics_update(Enemy* enemy, GameContext* ctx) {
             }
         }
     } else if (enemy->base.vy < 0) {
-        if (is_tile_solid( grid_x, grid_y)) {
+        if (is_tile_solid(game.level_index, grid_x, grid_y)) {
             new_y = (grid_y + 1) * TILE_HEIGHT;
             enemy->base.vy = 0;
         }
