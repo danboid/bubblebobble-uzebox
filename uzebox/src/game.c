@@ -163,7 +163,7 @@ void render_title_screen(void) {
     // Test: fill screen with tiles to verify video output
     for (uint8_t y = 0; y < 28; y++) {
         for (uint8_t x = 0; x < 32; x++) {
-            SetTile(x, y, ((x + y) % 2) + 1);  // Checkerboard pattern
+            vram[(y) * VRAM_TILES_H + (x)] = ((x + y) % 2) + 1;
         }
     }
 }
@@ -299,11 +299,11 @@ void render_level(void) {
             BlockType tile = get_tile(&game, x, y);
 
             if (tile == BLOCK_SOLID) {
-                SetTile(x, y, 1);
+                vram[(y) * VRAM_TILES_H + (x)] = 1;
             } else if (tile == BLOCK_SEMI) {
-                SetTile(x, y, 2);
+                vram[(y) * VRAM_TILES_H + (x)] = 2;
             } else {
-                SetTile(x, y, 0);
+                vram[(y) * VRAM_TILES_H + (x)] = 0;
             }
         }
     }
@@ -398,7 +398,7 @@ void GameLoop(void) {
     if (!vram_filled) {
         for (uint8_t y = 0; y < 28; y++) {
             for (uint8_t x = 0; x < 32; x++) {
-                vram[(y * 32) + x] = ((x + y) % 2) ? 1 : 2;
+                vram[(y * VRAM_TILES_H) + x] = ((x + y) % 2) ? 1 : 2;
             }
         }
         vram_filled = 1;
