@@ -7,6 +7,7 @@
 #include <avr/pgmspace.h>
 #include <uzebox.h>
 #include "game.h"
+#include "data/tileset.inc"
 
 // =============================================================================
 // MAIN ENTRY POINT
@@ -16,11 +17,18 @@ int main(void) {
     // Initialize video mode
     InitializeVideoMode();
 
+    // Set up tile table and sprites - CRITICAL for video output!
+    SetTileTable(tileset);
+    SetSpritesTileTable(tileset);
+
+    // Clear VRAM
+    ClearVram();
+
     // Initialize game with 1 player
     game_init(1);
 
-    // Main loop - kernel calls GameLoop() at ~60 FPS
+    // Main loop - call WaitVsync to sync with vertical blank
     while (1) {
-        // Do nothing - kernel handles the game loop
+        WaitVsync(1);
     }
 }

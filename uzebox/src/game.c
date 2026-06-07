@@ -394,17 +394,6 @@ void game_update(void) {
 void GameLoop(void) {
     game.frame_counter++;
 
-    // Test: Fill VRAM with checkerboard pattern to verify video output
-    static uint8_t vram_filled = 0;
-    if (!vram_filled) {
-        for (uint8_t y = 0; y < 28; y++) {
-            for (uint8_t x = 0; x < 32; x++) {
-                vram[(y * VRAM_TILES_H) + x] = ((x + y) % 2) ? 1 : 2;
-            }
-        }
-        vram_filled = 1;
-    }
-
     // Read input
     game_read_input();
 
