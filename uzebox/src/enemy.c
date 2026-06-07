@@ -318,12 +318,12 @@ void enemy_render(const Enemy* enemy) {
 // =============================================================================
 
 void spawn_enemies_from_level(GameContext* ctx) {
-    game.enemy_count = level->enemy_count;
+    game.enemy_count = ctx->enemy_count;
     
     for (uint8_t i = 0; i < game.enemy_count && i < 8; i++) {
-        uint8_t type = level->enemies[i * 3 + 0];
-        uint8_t tile_x = level->enemies[i * 3 + 1];
-        uint8_t tile_y = level->enemies[i * 3 + 2];
+        uint8_t type = ctx->enemies[i * 3 + 0];
+        uint8_t tile_x = ctx->enemies[i * 3 + 1];
+        uint8_t tile_y = ctx->enemies[i * 3 + 2];
         
         int16_t world_x = tile_x * TILE_WIDTH;
         int16_t world_y = tile_y * TILE_HEIGHT;
