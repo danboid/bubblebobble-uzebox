@@ -1,7 +1,7 @@
 /*
  * BubbleBobble Uzebox - Main Entry Point
  *
- * Uzebox game entry point using kernel callbacks
+ * Uzebox kernel entry point - GameLoop() is called by kernel at 60 FPS
  */
 
 #include <avr/pgmspace.h>
@@ -19,10 +19,12 @@ int main(void) {
     // Initialize game with 1 player
     game_init(1);
 
-    // Main game loop - kernel calls GameLoop() at ~60 FPS
+    // Start the kernel - it will call GameLoop() at ~60 FPS
+    // GameLoop() is defined in game.c
+    StartMusicPlayer(0);
+    
     while (1) {
-        // Wait for vertical sync
-        WaitVBlank();
+        // Kernel handles game loop via GameLoop() callback
     }
 
     return 0;
