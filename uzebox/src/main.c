@@ -9,12 +9,26 @@
 #include "game.h"
 
 // =============================================================================
+// EMPTY TILEMAP DATA (32x28 = screen size)
+// =============================================================================
+
+const char empty_tilemap[] PROGMEM = {
+    #include "data/empty_tilemap.txt"
+};
+
+// =============================================================================
 // MAIN ENTRY POINT
 // =============================================================================
 
 int main(void) {
     // Initialize video mode
     InitializeVideoMode();
+
+    // Clear VRAM
+    ClearVram();
+
+    // Set tilemap
+    SetTileMap(empty_tilemap);
 
     // Initialize game with 1 player
     game_init(1);

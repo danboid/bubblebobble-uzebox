@@ -160,9 +160,12 @@ void update_title_screen(void) {
 }
 
 void render_title_screen(void) {
-    // Render title text
-    // draw_text(10, 10, "BUBBLE BOBBLE");
-    // draw_text(8, 15, "PRESS START");
+    // Test: fill screen with tiles to verify video output
+    for (uint8_t y = 0; y < 28; y++) {
+        for (uint8_t x = 0; x < 32; x++) {
+            SetTile(x, y, ((x + y) % 2) + 1);  // Checkerboard pattern
+        }
+    }
 }
 
 // =============================================================================
@@ -290,15 +293,17 @@ void render_score_screen(void) {
 // =============================================================================
 
 void render_level(void) {
-    // Render tiles
-    for (uint8_t y = 0; y < GRID_SIZE_Y; y++) {
-        for (uint8_t x = 0; x < GRID_SIZE_X; x++) {
+    // Render tiles using SetTile (tile coordinates, not pixels)
+    for (uint8_t y = 0; y < 28; y++) {
+        for (uint8_t x = 0; x < 32; x++) {
             BlockType tile = get_tile(&game, x, y);
-            
+
             if (tile == BLOCK_SOLID) {
-                // draw_sprite(x * TILE_WIDTH, y * TILE_HEIGHT, TILE_SOLID, 0);
+                SetTile(x, y, 1);
             } else if (tile == BLOCK_SEMI) {
-                // draw_sprite(x * TILE_WIDTH, y * TILE_HEIGHT, TILE_SEMI_SOLID, 0);
+                SetTile(x, y, 2);
+            } else {
+                SetTile(x, y, 0);
             }
         }
     }
