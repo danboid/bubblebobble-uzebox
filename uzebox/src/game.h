@@ -41,6 +41,9 @@ void player_physics_update(Player* player, GameContext* ctx);
 void player_update_death(Player* player);
 void player_update_invulnerability(Player* player);
 void player_fire_bubble(Player* player);
+void player_update_walking(Player* player, int8_t move_input, uint8_t jump_pressed, uint8_t attack_pressed);
+void player_update_jumping(Player* player, int8_t move_input, uint8_t jump_pressed, uint8_t attack_pressed);
+void player_update_attacking(Player* player, int8_t move_input, uint8_t attack_pressed);
 
 // Enemy functions
 void enemy_update(Enemy* enemy);
@@ -54,6 +57,7 @@ void enemy_update_falling(Enemy* enemy);
 void enemy_update_jumping(Enemy* enemy);
 void enemy_update_animation(Enemy* enemy);
 void spawn_dead_enemy(int16_t x, int16_t y, uint8_t pickup_type);
+void spawn_enemies_from_level(GameContext* ctx);
 
 // Bubble functions
 void bubble_update(Bubble* bubble);
