@@ -157,7 +157,7 @@ void bubble_update_floating(Bubble* bubble) {
     // Check ceiling collision
     int8_t grid_x, grid_y;
     world_to_grid(bubble->base.x, bubble->base.y, &grid_x, &grid_y);
-    if (is_tile_solid(&game.level, grid_x, grid_y) || is_tile_solid(&game.level, grid_x + 1, grid_y)) {
+    if (is_tile_solid(&game, grid_x, grid_y) || is_tile_solid(&game, grid_x + 1, grid_y)) {
         bubble->base.y = (grid_y + 1) * TILE_HEIGHT + 1;
     }
     
@@ -200,7 +200,7 @@ void bubble_physics_update(Bubble* bubble) {
         
         // Bottom collision
         world_to_grid(bubble->base.x, bubble->base.y + bubble->base.height, &grid_x, &grid_y);
-        if (is_tile_solid(&game.level, grid_x, grid_y)) {
+        if (is_tile_solid(&game, grid_x, grid_y)) {
             bubble->base.y = grid_y * TILE_HEIGHT - bubble->base.height;
             bubble->base.vy = -bubble->base.vy / 2;
             if (bubble->base.vy > -2) bubble->base.vy = -2;

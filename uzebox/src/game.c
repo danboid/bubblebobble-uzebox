@@ -63,7 +63,7 @@ void game_start(void) {
     }
     
     // Load first level
-    load_level(game.level_index, &game.current_level);
+    load_level(&game, game.level_index);
     spawn_enemies_from_level(&game.current_level);
 }
 
@@ -223,7 +223,7 @@ void update_level_transition(void) {
         game.camera_y -= 2;
     } else if (game.transition_timer == 120) {
         // Load next level
-        load_level(game.level_index, &game.current_level);
+        load_level(&game, game.level_index);
         spawn_enemies_from_level(&game.current_level);
         game.camera_y = GRID_SIZE_Y * TILE_HEIGHT;
     } else {

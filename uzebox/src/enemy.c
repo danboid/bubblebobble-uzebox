@@ -112,14 +112,14 @@ void enemy_update_walking(Enemy* enemy) {
     int8_t grid_x, grid_y;
     world_to_grid(enemy->base.x, enemy->base.y + 1, &grid_x, &grid_y);
     
-    if (!is_tile_solid(&game.level, grid_x, grid_y)) {
+    if (!is_tile_solid(&game, grid_x, grid_y)) {
         enemy->state = ENEMY_FALLING;
         return;
     }
     
     // Check for wall - turn around
     int8_t check_x = (enemy->walk_direction > 0) ? grid_x + 1 : grid_x - 1;
-    if (is_tile_solid(&game.level, check_x, grid_y) || is_tile_solid(&game.level, check_x, grid_y - 1)) {
+    if (is_tile_solid(&game, check_x, grid_y) || is_tile_solid(&game, check_x, grid_y - 1)) {
         enemy->walk_direction = -enemy->walk_direction;
     }
 }
@@ -135,7 +135,7 @@ void enemy_update_falling(Enemy* enemy) {
     int8_t grid_x, grid_y;
     world_to_grid(enemy->base.x, enemy->base.y + 1, &grid_x, &grid_y);
     
-    if (is_tile_solid(&game.level, grid_x, grid_y) && enemy->base.vy > 0) {
+    if (is_tile_solid(&game, grid_x, grid_y) && enemy->base.vy > 0) {
         enemy->state = ENEMY_WALKING;
         enemy->base.y = grid_y * TILE_HEIGHT - enemy->base.height;
         enemy->base.vy = 0;
@@ -156,7 +156,7 @@ void enemy_update_jumping(Enemy* enemy) {
     int8_t grid_x, grid_y;
     world_to_grid(enemy->base.x, enemy->base.y + 1, &grid_x, &grid_y);
     
-    if (is_tile_solid(&game.level, grid_x, grid_y) && enemy->base.vy >= 0) {
+    if (is_tile_solid(&game, grid_x, grid_y) && enemy->base.vy >= 0) {
         enemy->state = ENEMY_WALKING;
         enemy->base.y = grid_y * TILE_HEIGHT - enemy->base.height;
         enemy->base.vy = 0;
