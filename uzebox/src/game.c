@@ -297,7 +297,7 @@ void render_level(void) {
     // Render tiles using SetTile (tile coordinates, not pixels)
     for (uint8_t y = 0; y < 28; y++) {
         for (uint8_t x = 0; x < 32; x++) {
-            BlockType tile = get_tile(&game, x, y);
+            BlockType tile = get_tile( x, y);
 
             if (tile == BLOCK_SOLID) {
                 vram[(y) * VRAM_TILES_H + (x)] = 1;

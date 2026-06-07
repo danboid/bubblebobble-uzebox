@@ -47,11 +47,10 @@ typedef struct Entity {
     uint8_t height;         // Hitbox height
     uint8_t sprite_base;    // Base tile index for sprite
     uint8_t frame;          // Current animation frame
-    uint8_t frame_timer;   // Timer for animation
+    uint8_t frame_timer;    // Timer for animation
     uint8_t direction;      // 0=left, 1=right
     uint8_t flags;          // Entity flags
-    void*  data;            // Type-specific data
-} Entity;
+} __attribute__((packed)) Entity;
 
 // Entity flags
 #define FLAG_ACTIVE       0x01
@@ -78,7 +77,7 @@ typedef struct Player {
     uint8_t  jump_held;
     uint8_t  jump_time;
     uint8_t  fast_fall;
-} Player;
+} __attribute__((packed)) Player;
 
 // =============================================================================
 // ENEMY
@@ -95,7 +94,7 @@ typedef struct Enemy {
     uint8_t  charging;      // Is charging attack (ZenChan)
     uint8_t  captured;      // Is captured in bubble
     uint8_t  pop_out;       // Will pop out of bubble
-} Enemy;
+} __attribute__((packed)) Enemy;
 
 // =============================================================================
 // BUBBLE (Projectile)
@@ -109,7 +108,7 @@ typedef struct Bubble {
     uint8_t  captured_enemy;// Index of captured enemy (0xFF = none)
     uint8_t  float_timer;
     uint8_t  pop_out;   // Time spent floating
-} Bubble;
+} __attribute__((packed)) Bubble;
 
 // Bubble states
 #define BUBBLE_NORMAL     0
@@ -125,7 +124,7 @@ typedef struct Pickup {
     
     uint8_t  type;          // Pickup type (fries, watermelon)
     uint8_t  active;
-} Pickup;
+} __attribute__((packed)) Pickup;
 
 // Pickup types
 #define PICKUP_WATERMELON  0
@@ -140,7 +139,7 @@ typedef struct DeadEnemy {
     
     uint8_t  pickup_type;   // Type of pickup to spawn
     uint8_t  lifetime;      // Frames until despawn
-} DeadEnemy;
+} __attribute__((packed)) DeadEnemy;
 
 // =============================================================================
 // LEVEL TILE
@@ -186,9 +185,6 @@ typedef struct GameContext {
     DeadEnemy dead_enemies[4];
     uint8_t dead_enemy_count;
     
-    // Current level
-    Tile level_tiles[28][32];
-    
     // Level transition
     uint8_t transition_timer;
     int16_t camera_y;
@@ -197,7 +193,7 @@ typedef struct GameContext {
     uint8_t prev_buttons[2];
     uint8_t buttons[2];
     
-} GameContext;
+} __attribute__((packed)) GameContext;
 
 // =============================================================================
 // ENTITY MANAGEMENT MACROS

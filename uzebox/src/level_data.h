@@ -14,6 +14,7 @@
 #define LEVEL_DATA_H
 
 #include <avr/pgmspace.h>
+#include <uzebox.h>
 #include "types.h"
 
 // =============================================================================
@@ -252,25 +253,25 @@ static const uint8_t* const level_enemies[] PROGMEM = {
 // LEVEL FUNCTIONS
 // =============================================================================
 
-// Load level data from flash into GameContext
+// Load level data from flash into GameContext (writes to VRAM)
 void load_level(GameContext* ctx, uint8_t level_index);
 
-// Get tile at grid position
-static inline BlockType get_tile(GameContext* ctx, int8_t grid_x, int8_t grid_y) {
+// Get tile at grid position (reads from VRAM)
+static inline BlockType get_tile(int8_t grid_x, int8_t grid_y) {
     if (grid_x < 0 || grid_x >= 32 || grid_y < 0 || grid_y >= 28) {
         return BLOCK_SOLID;
     }
-    return (BlockType)ctx->level_tiles[grid_y][grid_x].type;
+    return (BlockType)vram[(grid_y * VRAM_TILES_H) + grid_x];
 }
 
 // Check if a tile is solid
-static inline uint8_t is_tile_solid(GameContext* ctx, int8_t grid_x, int8_t grid_y) {
-    return get_tile(ctx, grid_x, grid_y) == BLOCK_SOLID;
+static inline uint8_t is_tile_solid(int8_t grid_x, int8_t grid_y) {
+    return get_tile(grid_x, grid_y) == BLOCK_SOLID;
 }
 
 // Check if a tile is semi-solid
-static inline uint8_t is_tile_semi_solid(GameContext* ctx, int8_t grid_x, int8_t grid_y) {
-    return get_tile(ctx, grid_x, grid_y) == BLOCK_SEMI;
+static inline uint8_t is_tile_semi_solid(int8_t grid_x, int8_t grid_y) {
+    return get_tile(grid_x, grid_y) == BLOCK_SEMI;
 }
 
 // Convert world position to grid position
