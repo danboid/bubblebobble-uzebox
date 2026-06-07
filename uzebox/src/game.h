@@ -44,7 +44,7 @@ void player_fire_bubble(Player* player);
 
 // Enemy functions
 void enemy_update(Enemy* enemy);
-void enemy_update_ai(Enemy* enemy, Player* target);
+void enemy_update_ai(Enemy* enemy, const Player* player);
 void enemy_render(const Enemy* enemy);
 void enemy_capture(Enemy* enemy);
 void enemy_release(Enemy* enemy);
