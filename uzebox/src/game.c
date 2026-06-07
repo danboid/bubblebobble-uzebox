@@ -64,7 +64,7 @@ void game_start(void) {
     
     // Load first level
     load_level(&game, game.level_index);
-    spawn_enemies_from_level(&game.current_level);
+    spawn_enemies_from_level(&game);
 }
 
 void game_next_level(void) {
@@ -178,7 +178,7 @@ void update_game(void) {
         player_handle_input(player, game.buttons[i], game.prev_buttons[i]);
         
         // Physics update
-        player_physics_update(player, &game.current_level);
+        player_physics_update(player, &game);
         
         // Update death/respawn
         player_update_death(player);
@@ -196,7 +196,7 @@ void update_game(void) {
         
         if (ENTITY_IS_ACTIVE(&enemy->base) && !enemy->captured) {
             enemy_update_ai(enemy, &game.players[0]);
-            enemy_physics_update(enemy, &game.current_level);
+            enemy_physics_update(enemy, &game);
         }
     }
     
@@ -224,7 +224,7 @@ void update_level_transition(void) {
     } else if (game.transition_timer == 120) {
         // Load next level
         load_level(&game, game.level_index);
-        spawn_enemies_from_level(&game.current_level);
+        spawn_enemies_from_level(&game);
         game.camera_y = GRID_SIZE_Y * TILE_HEIGHT;
     } else {
         // Moving to position
@@ -293,7 +293,7 @@ void render_level(void) {
     // Render tiles
     for (uint8_t y = 0; y < GRID_SIZE_Y; y++) {
         for (uint8_t x = 0; x < GRID_SIZE_X; x++) {
-            BlockType tile = get_tile(&game.current_level, x, y);
+            BlockType tile = get_tile(&game, x, y);
             
             if (tile == BLOCK_SOLID) {
                 // draw_sprite(x * TILE_WIDTH, y * TILE_HEIGHT, TILE_SOLID, 0);

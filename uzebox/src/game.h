@@ -31,13 +31,20 @@ void game_handle_input(void);
 void load_level(GameContext* ctx, uint8_t level_index);
 
 // Player functions
+void player_init(Player* player, uint8_t player_index);
 void player_update(Player* player);
 void player_render(const Player* player);
 void player_shoot(Player* player);
 void player_take_damage(Player* player);
+void player_handle_input(Player* player, uint8_t buttons, uint8_t prev_buttons);
+void player_physics_update(Player* player, GameContext* ctx);
+void player_update_death(Player* player);
+void player_update_invulnerability(Player* player);
+void player_fire_bubble(Player* player);
 
 // Enemy functions
 void enemy_update(Enemy* enemy);
+void enemy_update_ai(Enemy* enemy, Player* target);
 void enemy_render(const Enemy* enemy);
 void enemy_capture(Enemy* enemy);
 void enemy_release(Enemy* enemy);
@@ -58,12 +65,14 @@ void bubble_force_pop(Bubble* bubble);
 void bubble_update_normal(Bubble* bubble);
 void bubble_update_floating(Bubble* bubble);
 void bubble_update_popping(Bubble* bubble);
+void update_bubbles(void);
 
 // Collision functions
 void check_player_enemy_collisions(void);
 void check_player_bubble_collisions(void);
 void check_player_pickup_collisions(void);
 void update_dead_enemies(void);
+void run_collision_checks(void);
 
 // Spawn functions
 void spawn_pickup(int16_t x, int16_t y, uint8_t type);
