@@ -22,10 +22,8 @@ extern GameContext game;
 // Game initialization
 void game_init(uint8_t player_count);
 
-// Game main loop
-void game_update(void);
-void game_render(void);
-void game_handle_input(void);
+// Game main loop (called by kernel at ~60 FPS)
+void GameLoop(void);
 
 // Level management
 void load_level(GameContext* ctx, uint8_t level_index);

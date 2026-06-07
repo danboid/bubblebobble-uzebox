@@ -5,22 +5,8 @@
  */
 
 #include <avr/pgmspace.h>
+#include <uzebox.h>
 #include "game.h"
-
-// =============================================================================
-// GAME THREAD (Called by kernel at ~60 FPS)
-// =============================================================================
-
-void GameLoop(void) {
-    // Process input
-    game_handle_input();
-
-    // Update game logic
-    game_update();
-
-    // Render to screen
-    game_render();
-}
 
 // =============================================================================
 // MAIN ENTRY POINT
