@@ -318,20 +318,9 @@ void enemy_render(const Enemy* enemy) {
 // =============================================================================
 
 void spawn_enemies_from_level(GameContext* ctx) {
-    game.enemy_count = ctx->enemy_count;
-    
-    for (uint8_t i = 0; i < game.enemy_count && i < 8; i++) {
-        uint8_t type = ctx->enemies[i * 3 + 0];
-        uint8_t tile_x = ctx->enemies[i * 3 + 1];
-        uint8_t tile_y = ctx->enemies[i * 3 + 2];
-        
-        int16_t world_x = tile_x * TILE_WIDTH;
-        int16_t world_y = tile_y * TILE_HEIGHT;
-        
-        if (type == ENEMY_ZENCHAN) {
-            zenchand_init(&game.enemies[i], world_x, world_y);
-        } else {
-            maita_init(&game.enemies[i], world_x, world_y);
-        }
+    // Enemies are already loaded and positioned by load_level()
+    // Just ensure they are active
+    for (uint8_t i = 0; i < ctx->enemy_count && i < 8; i++) {
+        ctx->enemies[i].base.flags |= FLAG_ACTIVE;
     }
 }
