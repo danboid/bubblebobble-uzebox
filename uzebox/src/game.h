@@ -7,6 +7,7 @@
 #ifndef GAME_H
 #define GAME_H
 
+#include <uzebox.h>
 #include "types.h"
 
 // =============================================================================
