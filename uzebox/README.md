@@ -2,6 +2,30 @@
 
 A port of the BubbleBobble game to the Uzebox retro game console.
 
+## ⚠️ Development Status
+
+**CURRENTLY IN DEVELOPMENT - NOT FULLY FUNCTIONAL**
+
+The project builds successfully but video output is not working properly. Testing/debugging in progress.
+
+### What's Working
+- ✅ Code compiles without errors
+- ✅ Game loop structure implemented
+- ✅ Player, enemy, and bubble entities defined
+- ✅ Level data structure defined
+- ✅ Collision detection implemented
+- ✅ Basic game state machine (title, game, game over)
+
+### What's NOT Working
+- ❌ Video output - only black screen displayed
+- ❌ GameLoop() callback not being called by kernel
+- ❌ VRAM writes not visible on screen
+
+### Known Issues
+1. The Uzebox kernel's GameLoop() callback mechanism may not be working as expected
+2. Need to verify if the stopwatch reference pattern (main loop calling WaitVsync) works better
+3. Video mode initialization may need adjustment
+
 ## Overview
 
 This is a C implementation of a Bubble Bobble-style game designed for the Uzebox, an open-source 8-bit game console based on the Atmel ATMega644 microcontroller.
@@ -92,24 +116,45 @@ avrdude -c usbasp -p m644p -U flash:w:bubblebobble.hex:i
 
 ## Game Features
 
-### Implemented
-- ✅ Player movement (walk, jump)
-- ✅ Bubble shooting
-- ✅ Enemy AI (ZenChan, Maita)
-- ✅ Enemy capture in bubbles
-- ✅ Fruit drops from defeated enemies
-- ✅ Score system
-- ✅ Lives system
-- ✅ Multiple levels
-- ✅ Level transitions
+### Implemented (Core Code)
+- ✅ Player entity with state machine (walking, jumping, attacking, dead)
+- ✅ Bubble shooting mechanism
+- ✅ Enemy entities (ZenChan, Maita) with AI
+- ✅ Enemy capture in bubbles (pop out transformed)
+- ✅ Collision detection system
+- ✅ Game state management (title, game, level transition, game over)
+- ✅ Level data structure (3 levels defined)
+- ✅ Input handling (SNES controller)
 
-### TODO
-- [ ] Sprite animation frames
-- [ ] Sound effects
-- [ ] 2-player support
-- [ ] Title screen menu
-- [ ] Game over / Score screen
-- [ ] Sprite data from original PNGs
+### Missing / Incomplete
+- ❌ **VIDEO OUTPUT NOT WORKING** - Critical blocker
+- ❌ Sprite rendering to screen
+- ❌ Level tile rendering
+- ❌ Sound effects and music
+- ❌ Title screen with menu
+- ❌ Game over / Score screen rendering
+- ❌ Proper tileset with real graphics
+
+### TODO (Priority Order)
+1. **CRITICAL: Fix video output**
+   - Debug why GameLoop() isn't showing anything
+   - Test with simpler rendering approach
+   - Verify kernel is executing game code
+
+2. **Rendering**
+   - [ ] Implement sprite drawing using sprites[] array
+   - [ ] Implement tile rendering for levels
+   - [ ] Create proper tileset using gconvert
+   - [ ] Add UI rendering (score, lives, level)
+
+3. **Polish**
+   - [ ] Add sound effects
+   - [ ] Add background music
+   - [ ] 2-player support (requires different input method)
+
+4. **Testing**
+   - [ ] Test on real hardware (cuzebox works but real TV may differ)
+   - [ ] Verify timing with WaitVsync
 
 ## Project Structure
 
@@ -117,24 +162,35 @@ avrdude -c usbasp -p m644p -U flash:w:bubblebobble.hex:i
 uzebox/
 ├── main.c              # Main entry point, Uzebox kernel integration
 ├── Makefile            # Build configuration
-├── convert_sprites.py  # PNG to C sprite converter (basic)
+├── convert_sprites.py   # PNG to C sprite converter (basic)
 ├── convert_sprites_v2.py # PNG to C sprite converter (with sprite sheets)
 ├── convert_sprites_v3.py # PNG to C sprite converter (optimized)
 ├── README.md           # This file
 ├── data/
 │   ├── sprites.h          # Full sprite data (76 tiles, 4864 bytes)
 │   ├── sprite_data.h       # Complete sprite tile data with defines
-│   └── sprites_compact.h  # Compact sprite indices
+│   ├── sprites_compact.h  # Compact sprite indices
+│   ├── player1_sprites.h   # Player 1 animation frames
+│   ├── player2_sprites.h   # Player 2 animation frames
+│   ├── enemy_sprites.h     # Enemy sprites
+│   ├── bubble_sprites.h    # Bubble sprites
+│   ├── tile_sprites.h      # Level tile sprites
+│   └── item_sprites.h      # Item/fruit sprites
 └── src/
     ├── config.h         # Game configuration & constants
-    ├── types.h         # Game data structures
-    ├── level_data.h    # Level maps (converted from Levels.png)
+    ├── types.h          # Game data structures
+    ├── level_data.h     # Level maps (converted from Levels.png)
+    ├── level_data.c     # Level loading functions
     ├── player.c         # Player entity & state machine
-    ├── enemy.c         # Enemy entities & AI
-    ├── bubble.c        # Bubble projectile system
+    ├── enemy.c          # Enemy entities & AI
+    ├── bubble.c         # Bubble projectile system
     ├── collision.c      # Collision detection
-    └── game.c          # Main game loop & state management
+    ├── game.c           # Main game loop & state management
+    ├── game.h           # Game header with extern declarations
+    └── tileset.inc      # Placeholder tileset for video mode
 ```
+
+**Note:** The `data/` directory contains generated sprite data. The `tileset.inc` is a placeholder - for production, use `gconvert` to generate proper tiles from PNG files.
 
 ## Sprite Data
 
@@ -178,15 +234,43 @@ Total: ~2.5 KB RAM (fits in ATMega644's 4 KB RAM)
 ## Credits
 
 - Original game concept: Taito (Bubble Bobble)
-- This port: OpenHands AI
+- This port: OpenHands AI / Dan MacDonald (danboid)
 - Uzebox: Belogic Software (https://uzebox.org)
+- Reference code: Dan MacDonald's Uzebox Stopwatch example
 
 ## License
 
 This port inherits the license from the original BubbleBobble project.
+
+## Troubleshooting
+
+### Video Output Issues
+
+If you're seeing a black screen:
+
+1. **Check the kernel**: Make sure you have the correct Uzebox kernel:
+   ```bash
+   cd ../.. && git clone https://github.com/Uzebox/uzebox.git
+   ```
+
+2. **Verify video mode settings**: This port uses Mode 3 with:
+   - `VIDEO_MODE=3`
+   - `SCROLLING=0`
+   - `VRAM_TILES_H=32`, `VRAM_TILES_V=28`
+   - `RESOLUTION_EXT=1`
+
+3. **Test with emulator**: Try different Uzebox emulators:
+   ```bash
+   # Uzebox Studio (Windows)
+   # cuzebox (cross-platform Java)
+   # Emulatore (Windows)
+   ```
+
+4. **Test on real hardware**: Emulators may not perfectly emulate all video modes
 
 ## References
 
 - [Uzebox Wiki](https://uzebox.org/wiki/)
 - [Uzebox Mode 3 Documentation](https://uzebox.org/wiki/Video_Mode_3)
 - [Uzebox Forum](https://uzebox.org/forums/)
+- [gconvert Tool](https://uzebox.org/wiki/Generating_Tiles_and_Maps_with_gconvert)
