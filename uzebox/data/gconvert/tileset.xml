@@ -5,25 +5,27 @@
         Generates tileset.inc for use with SetTileTable()
         
         Tile size: 8x8 pixels
-        Color depth: 256 colors (palette-based)
+        Source: Assets/LevelTiles.png (40x200 = 5x25 tiles)
     -->
     
     <output
         filename="tileset.inc"
         format="c"
         type="tileset"
-        palette="palette.bmp"
+        palette="../assets/palette.bmp"
     />
     
     <!-- 
-        Source images to convert
-        Each image will be converted to tiles and added to the tileset
+        Level tiles (background)
+        LevelTiles.png: 40x200 pixels = 5 columns x 25 rows of 8x8 tiles
     -->
     
     <image
-        filename="tiles.png"
+        filename="../assets/LevelTiles.png"
         tile_width="8"
         tile_height="8"
+        tiles_x="5"
+        tiles_y="25"
         offset_x="0"
         offset_y="0"
     />

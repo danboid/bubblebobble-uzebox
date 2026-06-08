@@ -12,22 +12,37 @@
         filename="sprites.inc"
         format="c"
         type="sprites"
-        palette="palette.bmp"
+        palette="../assets/palette.bmp"
     />
     
     <!-- 
-        Source sprite sheet
-        Organizes sprites in a grid layout
+        Character sprites (Bubble & Bobble)
+        BubbleCharacter.png: 96x64 pixels = 6 sprites (2x3 grid of 16x16 sprites)
+        BobbleCharacter.png: 96x64 pixels = 6 sprites (2x3 grid of 16x16 sprites)
     -->
     
     <image
-        filename="spritesheet.png"
+        filename="../assets/BubbleCharacter.png"
         tile_width="8"
         tile_height="8"
-        offset_x="0"
-        offset_y="0"
         sprite_width="2"
         sprite_height="2"
+        tiles_x="6"
+        tiles_y="4"
+        offset_x="0"
+        offset_y="0"
+    />
+    
+    <image
+        filename="../assets/BobbleCharacter.png"
+        tile_width="8"
+        tile_height="8"
+        sprite_width="2"
+        sprite_height="2"
+        tiles_x="6"
+        tiles_y="4"
+        offset_x="0"
+        offset_y="0"
     />
     
 </gconvert>

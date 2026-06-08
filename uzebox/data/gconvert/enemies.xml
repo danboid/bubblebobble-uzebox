@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<gconvert>
+    <!-- 
+        Uzebox Mode 3 Enemy Sprites Converter
+        Generates enemies.inc for use with SetSpritesTileTable()
+        
+        Sprite size: 16x16 pixels (2x2 tiles)
+        Source: Assets/Enemys.png (256x192 = 16x12 tiles = 8x6 sprites of 2x2)
+    -->
+    
+    <output
+        filename="enemies.inc"
+        format="c"
+        type="sprites"
+        palette="../assets/palette.bmp"
+    />
+    
+    <!-- 
+        Enemy sprites
+        Enemys.png: 256x192 pixels = 16 columns x 12 rows of 8x8 tiles
+        = 8 columns x 6 rows of 16x16 sprites
+    -->
+    
+    <image
+        filename="../assets/Enemys.png"
+        tile_width="8"
+        tile_height="8"
+        sprite_width="2"
+        sprite_height="2"
+        tiles_x="16"
+        tiles_y="12"
+        offset_x="0"
+        offset_y="0"
+    />
+    
+</gconvert>

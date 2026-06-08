@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<gconvert>
+    <!-- 
+        Uzebox Mode 3 Items/Bubbles Converter
+        Generates items.inc for use with SetSpritesTileTable()
+        
+        Sprite size: 16x16 pixels (2x2 tiles)
+        Source: Assets/Items.png (576x64 = 72x8 tiles = 36x4 sprites)
+                Assets/Bubble.png (320x32 = 40x4 tiles = 20x2 sprites)
+    -->
+    
+    <output
+        filename="items.inc"
+        format="c"
+        type="sprites"
+        palette="../assets/palette.bmp"
+    />
+    
+    <!-- 
+        Items sprites
+        Items.png: 576x64 pixels = 72 columns x 8 rows of 8x8 tiles
+        = 36 columns x 4 rows of 16x16 sprites
+    -->
+    
+    <image
+        filename="../assets/Items.png"
+        tile_width="8"
+        tile_height="8"
+        sprite_width="2"
+        sprite_height="2"
+        tiles_x="72"
+        tiles_y="8"
+        offset_x="0"
+        offset_y="0"
+    />
+    
+    <!-- 
+        Bubble sprites
+        Bubble.png: 320x32 pixels = 40 columns x 4 rows of 8x8 tiles
+        = 20 columns x 2 rows of 16x16 sprites
+    -->
+    
+    <image
+        filename="../assets/Bubble.png"
+        tile_width="8"
+        tile_height="8"
+        sprite_width="2"
+        sprite_height="2"
+        tiles_x="40"
+        tiles_y="4"
+        offset_x="0"
+        offset_y="0"
+    />
+    
+</gconvert>
