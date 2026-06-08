@@ -247,14 +247,10 @@ If you're seeing a black screen:
    - `VRAM_TILES_H=32`, `VRAM_TILES_V=28`
    - `RESOLUTION_EXT=1`
 
-3. **Test with emulator**: Try different Uzebox emulators:
-   ```bash
-   # Uzebox Studio (Windows)
-   # cuzebox (cross-platform Java)
-   # Emulatore (Windows)
-   ```
+3. **Test with emulator**: The recommended emulator is **cuzebox** (written in C):
+   - Windows/Linux/macOS: https://github.com/ludox/cuzebox
 
-4. **Test on real hardware**: Emulators may not perfectly emulate all video modes
+4. **Test on real hardware**: Emulators may not perfectly emulate all video modes. Testing on real Uzebox hardware is recommended for final verification.
 
 ## References
 
