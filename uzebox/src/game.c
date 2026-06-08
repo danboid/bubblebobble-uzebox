@@ -183,14 +183,21 @@ void game_player_died(void) {
 // INPUT HANDLING
 // =============================================================================
 
+// Stub for controller reading - replace with actual Uzebox API
+// The Uzebox kernel provides input functions but we need to find the correct one
+static uint8_t stub_get_buttons(uint8_t player) {
+    // TODO: Replace with actual kernel function (e.g., GetButtons, ReadJoystick, etc.)
+    return 0;
+}
+
 void game_read_input(void) {
     // Store previous buttons
     game.prev_buttons[0] = game.buttons[0];
     game.prev_buttons[1] = game.buttons[1];
     
-    // Read both controllers using Uzebox API (GetButtons returns uint16_t)
-    game.buttons[0] = (uint8_t)GetButtons(0);
-    game.buttons[1] = (uint8_t)GetButtons(1);
+    // Read both controllers using Uzebox API
+    game.buttons[0] = stub_get_buttons(0);
+    game.buttons[1] = stub_get_buttons(1);
 }
 
 uint8_t is_button_pressed(uint8_t player, uint8_t button) {
