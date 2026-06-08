@@ -201,13 +201,7 @@ Sprites have been auto-converted from the original PNG assets:
 
 ### Converting Sprites
 
-To regenerate sprite data after modifying PNGs:
-
-```bash
-python3 convert_sprites_v3.py
-```
-
-This will convert all sprites from `../Assets/` and output to `data/sprites.h`.
+To convert game assets to Uzebox format, use the gconvert XML configuration files in the [data/gconvert/](https://github.com/danboid/bubblebobble-uzebox/tree/main/uzebox/data/gconvert) directory. This includes tilesets, sprites, enemies, and items.
 
 ## Memory Usage
 
@@ -248,7 +242,7 @@ If you're seeing a black screen:
    - `RESOLUTION_EXT=1`
 
 3. **Test with emulator**: The recommended emulator is **cuzebox** (written in C):
-   - Windows/Linux/macOS: https://github.com/ludox/cuzebox
+   - https://uzebox.org/wiki/CUzebox
 
 4. **Test on real hardware**: Emulators may not perfectly emulate all video modes. Testing on real Uzebox hardware is recommended for final verification.
 
