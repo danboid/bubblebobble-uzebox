@@ -16,6 +16,58 @@
 GameContext game;
 
 // =============================================================================
+// TEXT PRINTING HELPERS
+// =============================================================================
+
+// Digit strings in PROGMEM
+static const char digits_pstr[] PROGMEM = "0123456789";
+
+// Print a 16-bit unsigned integer at position (5 digits)
+void PrintUInt16(uint8_t x, uint8_t y, uint16_t value) {
+    uint16_t place = 10000;
+    uint8_t started = 0;
+    
+    while (place > 0) {
+        uint8_t digit = value / place;
+        value %= place;
+        
+        if (started || digit > 0 || place == 1) {
+            // Print single digit using char pointer trick
+            char c = pgm_read_byte(&digits_pstr[digit]);
+            char str[2] = {c, 0};
+            Print(x++, y, str);
+            started = 1;
+        } else {
+            // Print leading space
+            Print(x++, y, PSTR(" "));
+        }
+        place /= 10;
+    }
+}
+
+// Print an 8-bit unsigned integer at position (2 digits)
+void PrintUInt8(uint8_t x, uint8_t y, uint8_t value) {
+    uint8_t tens = value / 10;
+    uint8_t ones = value % 10;
+    
+    char str[2];
+    str[0] = pgm_read_byte(&digits_pstr[tens]);
+    str[1] = 0;
+    Print(x++, y, str);
+    
+    str[0] = pgm_read_byte(&digits_pstr[ones]);
+    Print(x++, y, str);
+}
+
+// Print a single digit
+void PrintDigit(uint8_t x, uint8_t y, uint8_t digit) {
+    char str[2];
+    str[0] = pgm_read_byte(&digits_pstr[digit]);
+    str[1] = 0;
+    Print(x, y, str);
+}
+
+// =============================================================================
 // GAME INITIALIZATION
 // =============================================================================
 
@@ -328,48 +380,37 @@ void render_ui(void) {
     if (game.player_count == 2) {
         // 2-player mode: show P1 info (top left), P2 info (top right)
         
-        // P1 Score (left side)
+        // P1 Score
         Print(1, 0, PSTR("P1"));
-        PrintUInt8(4, 0, game.players[0].score / 10000);
-        PrintUInt8(6, 0, (game.players[0].score / 1000) % 10);
-        PrintUInt8(8, 0, (game.players[0].score / 100) % 10);
-        PrintUInt8(10, 0, game.players[0].score % 100 / 10);
-        PrintUInt8(12, 0, game.players[0].score % 10);
+        PrintUInt16(4, 0, game.players[0].score);
         
         // P1 Lives
         Print(1, 1, PSTR("x"));
         PrintUInt8(3, 1, game.players[0].lives);
         
-        // P2 Score (right side)
+        // Level in center
+        Print(14, 0, PSTR("LV"));
+        PrintUInt8(17, 0, game.level_index + 1);
+        
+        // P2 Score
         Print(22, 0, PSTR("P2"));
-        PrintUInt8(25, 0, game.players[1].score / 10000);
-        PrintUInt8(27, 0, (game.players[1].score / 1000) % 10);
-        PrintUInt8(29, 0, (game.players[1].score / 100) % 10);
-        PrintUInt8(31, 0, game.players[1].score % 100 / 10);
+        PrintUInt16(25, 0, game.players[1].score);
         
         // P2 Lives
         Print(22, 1, PSTR("x"));
         PrintUInt8(24, 1, game.players[1].lives);
-        
-        // Level in center (smaller)
-        Print(14, 0, PSTR("LV"));
-        PrintUInt8(17, 0, game.level_index + 1);
     } else {
         // 1-player mode: show more info
         
-        // Score display (top left)
+        // Score display
         Print(1, 0, PSTR("SCORE"));
-        PrintUInt8(7, 0, game.players[0].score / 10000);
-        PrintUInt8(9, 0, (game.players[0].score / 1000) % 10);
-        PrintUInt8(11, 0, (game.players[0].score / 100) % 10);
-        PrintUInt8(13, 0, (game.players[0].score / 10) % 10);
-        PrintUInt8(15, 0, game.players[0].score % 10);
+        PrintUInt16(7, 0, game.players[0].score);
         
-        // Level indicator (top center)
+        // Level indicator
         Print(14, 0, PSTR("LV"));
         PrintUInt8(17, 0, game.level_index + 1);
         
-        // Lives (top right)
+        // Lives
         Print(28, 0, PSTR("x"));
         PrintUInt8(30, 0, game.players[0].lives);
     }
