@@ -5,6 +5,7 @@
  */
 
 #include <uzebox.h>
+#include <avr/pgmspace.h>
 #include "game.h"
 #include "tileset.inc"
 
