@@ -16,6 +16,9 @@ The project builds successfully. Major RAM optimizations have been applied to fi
 - ✅ Collision detection implemented
 - ✅ Basic game state machine (title, game, game over)
 - ✅ RAM usage optimized (~1KB freed by removing level_tiles duplicate)
+- ✅ 2-player support (P1 and P2 can start independently)
+- ✅ Font support for text rendering
+- ✅ UI rendering (score, level, lives display)
 
 ### Known Issues
 - Video output may not display properly on some emulators
@@ -122,28 +125,22 @@ avrdude -c usbasp -p m644p -U flash:w:bubblebobble.hex:i
 - ✅ Input handling (SNES controller)
 
 ### Missing / Incomplete
-- ❌ **VIDEO OUTPUT NOT WORKING** - Critical blocker
-- ❌ Sprite rendering to screen
-- ❌ Level tile rendering
+- ❌ Sprite rendering to screen (using sprites[] array)
 - ❌ Sound effects and music
-- ❌ Title screen with menu
-- ❌ Game over / Score screen rendering
-- ❌ Proper tileset with real graphics
+- ❌ Proper tileset with real graphics (using gconvert)
 
 ### TODO (Priority Order)
-1. **Video Output**
-   - [ ] Test on real Uzebox hardware
-   - [ ] Verify video displays correctly on real TV
-
-2. **Rendering**
+1. **Rendering**
    - [ ] Implement sprite drawing using sprites[] array
    - [ ] Create proper tileset using gconvert
-   - [ ] Add UI rendering (score, lives, level)
+
+2. **Testing**
+   - [ ] Test on real Uzebox hardware
+   - [ ] Verify video displays correctly on real TV
 
 3. **Polish**
    - [ ] Add sound effects
    - [ ] Add background music
-   - [ ] 2-player support
 
 ## Project Structure
 
@@ -205,14 +202,17 @@ To convert game assets to Uzebox format, use the gconvert XML configuration file
 
 ## Memory Usage
 
-Estimated RAM usage:
-- Game context: ~512 bytes
-- Player entities: ~128 bytes × 2
-- Enemy entities: ~128 bytes × 8
-- Bubble entities: ~128 bytes × 8
-- Level tiles: 32×28 = 896 bytes
+Estimated RAM usage (after optimizations):
+- Game context: ~400 bytes (reduced from level_tiles removal)
+- Player entities: ~52 bytes × 2 = 104 bytes
+- Enemy entities: ~52 bytes × 8 = 416 bytes
+- Bubble entities: ~52 bytes × 8 = 416 bytes
+- Pickup/DeadEnemy entities: ~36 bytes × 8 = 288 bytes
+- VRAM: 32×28 = 896 bytes (used for video output)
 
-Total: ~2.5 KB RAM (fits in ATMega644's 4 KB RAM)
+Total: ~2.5 KB RAM (fits in ATMega644's 4 KB RAM with room for stack)
+
+**Note:** Level tiles are no longer duplicated in RAM. Instead, collision checks read directly from Flash memory (PROGMEM), and VRAM is used only for video display.
 
 ## Credits
 
