@@ -148,53 +148,24 @@ avrdude -c usbasp -p m644p -U flash:w:bubblebobble.hex:i
 uzebox/
 ├── main.c              # Main entry point, Uzebox kernel integration
 ├── Makefile            # Build configuration
-├── convert_sprites.py   # PNG to C sprite converter (basic)
-├── convert_sprites_v2.py # PNG to C sprite converter (with sprite sheets)
-├── convert_sprites_v3.py # PNG to C sprite converter (optimized)
 ├── README.md           # This file
 ├── data/
-│   ├── sprites.h          # Full sprite data (76 tiles, 4864 bytes)
-│   ├── sprite_data.h       # Complete sprite tile data with defines
-│   ├── sprites_compact.h  # Compact sprite indices
-│   ├── player1_sprites.h   # Player 1 animation frames
-│   ├── player2_sprites.h   # Player 2 animation frames
-│   ├── enemy_sprites.h     # Enemy sprites
-│   ├── bubble_sprites.h    # Bubble sprites
-│   ├── tile_sprites.h      # Level tile sprites
-│   └── item_sprites.h      # Item/fruit sprites
+│   └── gconvert/       # gconvert XML configs for asset conversion
 └── src/
-    ├── config.h         # Game configuration & constants
-    ├── types.h          # Game data structures
-    ├── level_data.h     # Level maps (converted from Levels.png)
-    ├── level_data.c     # Level loading functions
-    ├── player.c         # Player entity & state machine
-    ├── enemy.c          # Enemy entities & AI
-    ├── bubble.c         # Bubble projectile system
-    ├── collision.c      # Collision detection
-    ├── game.c           # Main game loop & state management
-    ├── game.h           # Game header with extern declarations
-    └── tileset.inc      # Placeholder tileset for video mode
+    ├── config.h        # Game configuration & constants
+    ├── types.h         # Game data structures
+    ├── level_data.h    # Level maps in Flash (PROGMEM)
+    ├── level_data.c    # Level loading functions
+    ├── player.c        # Player entity & state machine
+    ├── enemy.c         # Enemy entities & AI
+    ├── bubble.c        # Bubble projectile system
+    ├── collision.c     # Collision detection
+    ├── game.c          # Main game loop & state management
+    ├── game.h          # Game header with extern declarations
+    └── tileset.inc     # Tileset for video mode (use gconvert for production)
 ```
 
-**Note:** The `data/` directory contains generated sprite data. The `tileset.inc` is a placeholder - for production, use `gconvert` to generate proper tiles from PNG files.
-
-## Sprite Data
-
-Sprites have been auto-converted from the original PNG assets:
-
-| Sprite | Source File | Tiles | Memory |
-|--------|-------------|-------|--------|
-| Player 1 | BubbleCharacter.png | 4 frames × 4 tiles | 1024 bytes |
-| Player 2 | BobbleCharacter.png | 4 frames × 4 tiles | 1024 bytes |
-| Bubbles | BubbleLarge.png | 3 frames × 4 tiles | 768 bytes |
-| ZenChan | Enemys.png | 4 frames × 4 tiles | 1024 bytes |
-| Maita | Enemys.png | 2 frames × 4 tiles | 512 bytes |
-| Watermelon | Items.png | 1 tile | 64 bytes |
-| Fries | Items.png | 1 tile | 64 bytes |
-| Solid Tile | LevelTiles.png | 1 tile | 64 bytes |
-| Semi Tile | LevelTiles.png | 1 tile | 64 bytes |
-
-**Total: 76 tiles, 4,864 bytes**
+**Note:** Use `gconvert` to generate proper tiles from PNG files. See the gconvert directory for XML configuration files.
 
 ### Converting Sprites
 
