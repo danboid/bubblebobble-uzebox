@@ -8,6 +8,7 @@
 #include <uzebox.h>
 #include "game.h"
 #include "tileset.inc"
+#include FONT_FILE
 
 // =============================================================================
 // MAIN ENTRY POINT
@@ -19,7 +20,10 @@ int main(void) {
 
     // Set up tile table and sprites
     SetTileTable(tileset);
-    SetSpritesTileTable(tileset);
+    SetSpritesTileTable(sprites);
+
+    // Initialize font tiles (required for Print function)
+    InitFontTiles(FONT_TILE_START);
 
     // Clear VRAM
     ClearVram();
