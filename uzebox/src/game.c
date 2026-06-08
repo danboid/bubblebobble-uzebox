@@ -315,16 +315,21 @@ void render_level(void) {
 // =============================================================================
 
 void render_ui(void) {
-    // Render lives
-    // draw_sprite(0, SCREEN_HEIGHT - TILE_HEIGHT, TILE_HEART, 0);
-    // draw_number(2, SCREEN_HEIGHT - TILE_HEIGHT, ":", game.players[0].lives);
+    // Score display (top left)
+    Print(1, 0, PSTR("SCORE"));
+    PrintUInt8(7, 0, game.players[0].score / 10000);
+    PrintUInt8(9, 0, (game.players[0].score / 1000) % 10);
+    PrintUInt8(11, 0, (game.players[0].score / 100) % 10);
+    PrintUInt8(13, 0, (game.players[0].score / 10) % 10);
+    PrintUInt8(15, 0, game.players[0].score % 10);
     
-    // Render score
-    // draw_number(SCREEN_WIDTH - 40, 0, "", game.players[0].score);
+    // Level indicator (top center)
+    Print(14, 0, PSTR("LV"));
+    PrintUInt8(17, 0, game.level_index + 1);
     
-    // Level indicator
-    // draw_text(SCREEN_WIDTH/2 - 10, 0, "LV:");
-    // draw_number(SCREEN_WIDTH/2 + 10, 0, "", game.level_index + 1);
+    // Lives (top right)
+    Print(28, 0, PSTR("x"));
+    PrintUInt8(30, 0, game.players[0].lives);
 }
 
 // =============================================================================

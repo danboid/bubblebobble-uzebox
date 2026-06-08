@@ -22,6 +22,10 @@ KERNEL_OPTIONS += -DRAM_TILES_COUNT=4
 KERNEL_OPTIONS += -DMAX_SPRITES=8
 KERNEL_OPTIONS += -DINTRO_LOGO=0
 KERNEL_OPTIONS += -DMIXER_CHAN4_TYPE=1
+KERNEL_OPTIONS += -DFONT_TILES=1
+
+## Font file
+FONT_FILE = $(KERNEL_DIR)/fonts/font-8x8.inc
 
 ## Options common to compile, link and assembly rules
 COMMON = -mmcu=$(MCU)
