@@ -1,7 +1,7 @@
 /*
  * BubbleBobble Uzebox - Main Entry Point
  *
- * Based on the stopwatch example pattern
+ * Uzebox Mode 3 Game
  */
 
 #include <avr/pgmspace.h>
@@ -23,9 +23,6 @@ int main(void) {
 
     // Clear VRAM
     ClearVram();
-
-    // Initialize game with 1 player
-    game_init(1);
 
     // Main game loop - like the stopwatch example
     while (1) {

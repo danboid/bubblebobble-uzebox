@@ -154,19 +154,29 @@ uint8_t is_button_held(uint8_t player, uint8_t button) {
 // =============================================================================
 
 void update_title_screen(void) {
-    // Start game on button press
+    // Start 1-player game on button press
     if (is_button_pressed(0, BTN_START) || is_button_pressed(0, BTN_A)) {
+        game.player_count = 1;
+        game_start();
+    }
+    // Start 2-player game on button press (P2)
+    if (is_button_pressed(1, BTN_START) || is_button_pressed(1, BTN_A)) {
+        game.player_count = 2;
         game_start();
     }
 }
 
 void render_title_screen(void) {
-    // Test: fill screen with tiles to verify video output
-    for (uint8_t y = 0; y < 28; y++) {
-        for (uint8_t x = 0; x < 32; x++) {
-            vram[(y) * VRAM_TILES_H + (x)] = ((x + y) % 2) + 1;
-        }
-    }
+    // Show title
+    Print(10, 10, PSTR("BUBBLEBOBBLE"));
+    
+    // 1 player option
+    Print(12, 14, PSTR("P1 START"));
+    Print(12, 16, PSTR("PRESS A"));
+    
+    // 2 player option  
+    Print(12, 20, PSTR("P2 START"));
+    Print(12, 22, PSTR("PRESS A"));
 }
 
 // =============================================================================
@@ -315,21 +325,54 @@ void render_level(void) {
 // =============================================================================
 
 void render_ui(void) {
-    // Score display (top left)
-    Print(1, 0, PSTR("SCORE"));
-    PrintUInt8(7, 0, game.players[0].score / 10000);
-    PrintUInt8(9, 0, (game.players[0].score / 1000) % 10);
-    PrintUInt8(11, 0, (game.players[0].score / 100) % 10);
-    PrintUInt8(13, 0, (game.players[0].score / 10) % 10);
-    PrintUInt8(15, 0, game.players[0].score % 10);
-    
-    // Level indicator (top center)
-    Print(14, 0, PSTR("LV"));
-    PrintUInt8(17, 0, game.level_index + 1);
-    
-    // Lives (top right)
-    Print(28, 0, PSTR("x"));
-    PrintUInt8(30, 0, game.players[0].lives);
+    if (game.player_count == 2) {
+        // 2-player mode: show P1 info (top left), P2 info (top right)
+        
+        // P1 Score (left side)
+        Print(1, 0, PSTR("P1"));
+        PrintUInt8(4, 0, game.players[0].score / 10000);
+        PrintUInt8(6, 0, (game.players[0].score / 1000) % 10);
+        PrintUInt8(8, 0, (game.players[0].score / 100) % 10);
+        PrintUInt8(10, 0, game.players[0].score % 100 / 10);
+        PrintUInt8(12, 0, game.players[0].score % 10);
+        
+        // P1 Lives
+        Print(1, 1, PSTR("x"));
+        PrintUInt8(3, 1, game.players[0].lives);
+        
+        // P2 Score (right side)
+        Print(22, 0, PSTR("P2"));
+        PrintUInt8(25, 0, game.players[1].score / 10000);
+        PrintUInt8(27, 0, (game.players[1].score / 1000) % 10);
+        PrintUInt8(29, 0, (game.players[1].score / 100) % 10);
+        PrintUInt8(31, 0, game.players[1].score % 100 / 10);
+        
+        // P2 Lives
+        Print(22, 1, PSTR("x"));
+        PrintUInt8(24, 1, game.players[1].lives);
+        
+        // Level in center (smaller)
+        Print(14, 0, PSTR("LV"));
+        PrintUInt8(17, 0, game.level_index + 1);
+    } else {
+        // 1-player mode: show more info
+        
+        // Score display (top left)
+        Print(1, 0, PSTR("SCORE"));
+        PrintUInt8(7, 0, game.players[0].score / 10000);
+        PrintUInt8(9, 0, (game.players[0].score / 1000) % 10);
+        PrintUInt8(11, 0, (game.players[0].score / 100) % 10);
+        PrintUInt8(13, 0, (game.players[0].score / 10) % 10);
+        PrintUInt8(15, 0, game.players[0].score % 10);
+        
+        // Level indicator (top center)
+        Print(14, 0, PSTR("LV"));
+        PrintUInt8(17, 0, game.level_index + 1);
+        
+        // Lives (top right)
+        Print(28, 0, PSTR("x"));
+        PrintUInt8(30, 0, game.players[0].lives);
+    }
 }
 
 // =============================================================================
