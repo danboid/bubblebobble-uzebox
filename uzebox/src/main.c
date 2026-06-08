@@ -4,11 +4,9 @@
  * Uzebox Mode 3 Game
  */
 
-#include <avr/pgmspace.h>
 #include <uzebox.h>
 #include "game.h"
 #include "tileset.inc"
-#include FONT_FILE
 
 // =============================================================================
 // MAIN ENTRY POINT
@@ -18,21 +16,15 @@ int main(void) {
     // Initialize video mode
     InitializeVideoMode();
 
-    // Set up tile table and sprites
+    // Set up tile table (font tiles are included in tileset when FONT_TILES=1)
     SetTileTable(tileset);
-    SetSpritesTileTable(sprites);
-
-    // Initialize font tiles (required for Print function)
-    InitFontTiles(FONT_TILE_START);
 
     // Clear VRAM
     ClearVram();
 
-    // Main game loop - like the stopwatch example
+    // Main game loop
     while (1) {
-        WaitVsync(1);  // Sync to ~60 FPS
-        
-        // Call GameLoop directly
+        WaitVsync(1);
         GameLoop();
     }
 }

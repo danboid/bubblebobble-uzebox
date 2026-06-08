@@ -188,9 +188,9 @@ void game_read_input(void) {
     game.prev_buttons[0] = game.buttons[0];
     game.prev_buttons[1] = game.buttons[1];
     
-    // Read both controllers using Uzebox API
-    game.buttons[0] = GetControllerState(0);
-    game.buttons[1] = GetControllerState(1);
+    // Read both controllers using Uzebox API (GetButtons returns uint16_t)
+    game.buttons[0] = (uint8_t)GetButtons(0);
+    game.buttons[1] = (uint8_t)GetButtons(1);
 }
 
 uint8_t is_button_pressed(uint8_t player, uint8_t button) {
