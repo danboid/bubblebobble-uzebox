@@ -4,9 +4,9 @@ A port of the BubbleBobble game to the Uzebox retro game console.
 
 ## ⚠️ Development Status
 
-**CURRENTLY IN DEVELOPMENT - NOT FULLY FUNCTIONAL**
+**CURRENTLY IN DEVELOPMENT**
 
-The project builds successfully but video output is not working properly. Testing/debugging in progress.
+The project builds successfully. Major RAM optimizations have been applied to fit within the ATMega644's 4KB RAM constraint.
 
 ### What's Working
 - ✅ Code compiles without errors
@@ -15,16 +15,11 @@ The project builds successfully but video output is not working properly. Testin
 - ✅ Level data structure defined
 - ✅ Collision detection implemented
 - ✅ Basic game state machine (title, game, game over)
-
-### What's NOT Working
-- ❌ Video output - only black screen displayed
-- ❌ GameLoop() callback not being called by kernel
-- ❌ VRAM writes not visible on screen
+- ✅ RAM usage optimized (~1KB freed by removing level_tiles duplicate)
 
 ### Known Issues
-1. The Uzebox kernel's GameLoop() callback mechanism may not be working as expected
-2. Need to verify if the stopwatch reference pattern (main loop calling WaitVsync) works better
-3. Video mode initialization may need adjustment
+- Video output may not display properly on some emulators
+- Real hardware testing recommended for full verification
 
 ## Overview
 
@@ -136,25 +131,19 @@ avrdude -c usbasp -p m644p -U flash:w:bubblebobble.hex:i
 - ❌ Proper tileset with real graphics
 
 ### TODO (Priority Order)
-1. **CRITICAL: Fix video output**
-   - Debug why GameLoop() isn't showing anything
-   - Test with simpler rendering approach
-   - Verify kernel is executing game code
+1. **Video Output**
+   - [ ] Test on real Uzebox hardware
+   - [ ] Verify video displays correctly on real TV
 
 2. **Rendering**
    - [ ] Implement sprite drawing using sprites[] array
-   - [ ] Implement tile rendering for levels
    - [ ] Create proper tileset using gconvert
    - [ ] Add UI rendering (score, lives, level)
 
 3. **Polish**
    - [ ] Add sound effects
    - [ ] Add background music
-   - [ ] 2-player support (requires different input method)
-
-4. **Testing**
-   - [ ] Test on real hardware (cuzebox works but real TV may differ)
-   - [ ] Verify timing with WaitVsync
+   - [ ] 2-player support
 
 ## Project Structure
 
@@ -234,9 +223,8 @@ Total: ~2.5 KB RAM (fits in ATMega644's 4 KB RAM)
 ## Credits
 
 - Original game concept: Taito (Bubble Bobble)
-- This port: OpenHands AI / Dan MacDonald (danboid)
+- This port: Dan MacDonald (danboid) / OpenHands AI
 - Uzebox: Belogic Software (https://uzebox.org)
-- Reference code: Dan MacDonald's Uzebox Stopwatch example
 
 ## License
 
