@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<gconvert>
+    <!-- 
+        Uzebox Mode 3 Tileset Converter
+        Generates tileset.inc for use with SetTileTable()
+        
+        Tile size: 8x8 pixels
+        Color depth: 256 colors (palette-based)
+    -->
+    
+    <output
+        filename="tileset.inc"
+        format="c"
+        type="tileset"
+        palette="palette.bmp"
+    />
+    
+    <!-- 
+        Source images to convert
+        Each image will be converted to tiles and added to the tileset
+    -->
+    
+    <image
+        filename="tiles.png"
+        tile_width="8"
+        tile_height="8"
+        offset_x="0"
+        offset_y="0"
+    />
+    
+</gconvert>
