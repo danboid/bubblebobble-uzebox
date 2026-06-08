@@ -48,6 +48,7 @@ void player_update_attacking(Player* player, int8_t move_input, uint8_t attack_p
 void enemy_update(Enemy* enemy);
 void enemy_update_ai(Enemy* enemy, const Player* player);
 void enemy_render(const Enemy* enemy);
+void enemy_physics_update(Enemy* enemy, GameContext* ctx);
 void enemy_capture(Enemy* enemy);
 void enemy_release(Enemy* enemy);
 void enemy_die(Enemy* enemy);
