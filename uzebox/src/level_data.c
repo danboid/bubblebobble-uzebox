@@ -15,7 +15,7 @@
 
 // Load level data from flash into VRAM and GameContext
 void load_level(GameContext* ctx, uint8_t level_index) {
-    const uint8_t* data = pgm_read_word(&level_data[level_index]);
+    const uint8_t* data = (const uint8_t*)pgm_read_word(&level_data[level_index]);
 
     // Load 32x28 tiles (width x height) directly to VRAM
     for (uint8_t y = 0; y < 28; y++) {
@@ -26,7 +26,7 @@ void load_level(GameContext* ctx, uint8_t level_index) {
     }
 
     // Load enemy spawn data
-    const uint8_t* enemy_data = pgm_read_word(&level_enemies[level_index]);
+    const uint8_t* enemy_data = (const uint8_t*)pgm_read_word(&level_enemies[level_index]);
     ctx->enemy_count = pgm_read_byte(enemy_data++);
 
     for (uint8_t i = 0; i < ctx->enemy_count && i < 8; i++) {

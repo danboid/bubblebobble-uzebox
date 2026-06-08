@@ -292,8 +292,7 @@ uint8_t bubble_check_player_collision(Bubble* bubble, Player* player) {
 void bubble_render(Bubble* bubble) {
     if (!ENTITY_IS_ACTIVE(&bubble->base)) return;
     
-    uint8_t tile = bubble->base.sprite_base;
-    
+    // TODO: Implement sprite rendering using sprites[] array
     if (bubble->captured_enemy != 0xFF) {
         // Render enemy inside bubble
         Enemy* enemy = &game.enemies[bubble->captured_enemy];

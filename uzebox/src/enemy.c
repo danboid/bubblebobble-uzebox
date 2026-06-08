@@ -305,12 +305,10 @@ void enemy_render(const Enemy* enemy) {
     if (!ENTITY_IS_ACTIVE(&enemy->base)) return;
     if (enemy->captured) return;  // Rendered by bubble
     
-    uint8_t tile = enemy->base.sprite_base;
-    
-    // Draw sprite
+    // TODO: Implement sprite rendering using sprites[] array
     // draw_sprite(enemy->base.x / TILE_WIDTH * TILE_WIDTH, 
     //             enemy->base.y / TILE_HEIGHT * TILE_HEIGHT,
-    //             tile, enemy->base.direction);
+    //             enemy->base.sprite_base, enemy->base.direction);
 }
 
 // =============================================================================

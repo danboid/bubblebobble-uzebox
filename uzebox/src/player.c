@@ -254,7 +254,6 @@ void player_physics_update(Player* player, GameContext* ctx) {
     
     // Vertical collision
     world_to_grid(new_x, new_y, &grid_x, &grid_y);
-    uint8_t was_grounded = ENTITY_IS_GROUNDED(&player->base);
     
     if (player->base.vy > 0) {
         // Falling - check below
@@ -350,13 +349,9 @@ void player_render(const Player* player) {
     // Flash when invulnerable
     if (player->invulnerable && (player->invulnerable_timer & 0x08)) return;
     
-    uint8_t tile = player->base.sprite_base + player->base.frame;
-    
-    // Draw sprite at position
-    // Note: Using Uzebox API functions
-    uint8_t x = player->base.x / TILE_WIDTH;
-    uint8_t y = player->base.y / TILE_HEIGHT;
-    
-    // This will be implemented with the rendering system
-    // draw_sprite(x * TILE_WIDTH, y * TILE_HEIGHT, tile, player->base.direction);
+    // TODO: Implement sprite rendering using sprites[] array
+    // draw_sprite(player->base.x / TILE_WIDTH * TILE_WIDTH, 
+    //             player->base.y / TILE_HEIGHT * TILE_HEIGHT,
+    //             player->base.sprite_base + player->base.frame, 
+    //             player->base.direction);
 }

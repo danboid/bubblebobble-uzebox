@@ -8,6 +8,7 @@
 #include "types.h"
 #include "config.h"
 #include "level_data.h"
+#include "game.h"
 
 // =============================================================================
 // GLOBAL GAME CONTEXT
